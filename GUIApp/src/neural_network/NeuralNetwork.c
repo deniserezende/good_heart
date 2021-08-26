@@ -13,6 +13,47 @@ typedef struct elemento{
     Layer output_layer;
 }NeuralNetworkImpl;
 
+double h_weights[] = {
+    0.62483275,
+    -2.17886,
+    0.72318494,
+    0.78624016,
+    1.1654408,
+    -0.13635767,
+    -0.08786797,
+    -0.50736105,
+    -1.0216297,
+    1.2133216,
+    0.57142025,
+    -1.3304504,
+    -0.60613847,
+    0.6734291,
+    -0.35304195,
+    1.3840201,
+    0.77570444,
+    -2.0710368,
+    1.0285048,
+    0.99156916,
+    1.396082,
+    0.11226737,
+    -0.25664058,
+    -0.08537648,
+    0.4062479,
+    0.21855634,
+    -0.70404017,
+    0.2317028,
+    -0.48990095,
+    0.017290175,
+    0.52245456,
+    -0.05953443
+};
+
+double o_weights[] = {
+    -1.9082618,
+    1.1022542,
+    -1.245951,
+    0.013958693
+};
 
 NeuralNetwork createNeuralNetwork(){
     return malloc(sizeof(NeuralNetworkImpl));
@@ -21,9 +62,10 @@ NeuralNetwork createNeuralNetwork(){
 
 void addLayer(NeuralNetwork neuralNetwork, Layer layer){
     NeuralNetworkImpl* nn = neuralNetwork;
-    FILE* weights;
+    //FILE* weights;
     Lista neurons;
-    char line[80];
+    //char line[80];
+    int i;
     switch (getLayerType(layer)){
         case INPUT:
             nn->input_layer = layer;
@@ -33,7 +75,8 @@ void addLayer(NeuralNetwork neuralNetwork, Layer layer){
                 printf("Não foi possivel encontrar a camada de entrada");
                 exit(0);
             }
-            weights = fopen("h_weights.txt", "r");
+            //weights = fopen("h_weights.txt", "r");
+            i=0;
             neurons = getNeurons(layer);
             while(neurons != NULL){
                 Neuron neuron = get(neurons);
@@ -41,11 +84,13 @@ void addLayer(NeuralNetwork neuralNetwork, Layer layer){
                 while(inputNeurons != NULL){
                     Neuron inputNeuron = get(inputNeurons);
                     double weight;
-                    fgets(line, 80, weights);
-                    sscanf(line, "%lf", &weight);
+                    //fgets(line, 80, weights);
+                    //sscanf(line, "%lf", &weight);
+                    weight = h_weights[i];
                     Edge e = createEdge(weight, inputNeuron);
                     insertNeuronEdge(neuron, e);
                     inputNeurons = getProx(inputNeurons);
+                    i++;
                 }
                 neurons = getProx(neurons);
             }
@@ -56,7 +101,8 @@ void addLayer(NeuralNetwork neuralNetwork, Layer layer){
                 printf("Não foi possivel encontrar a camada oculta");
                 exit(0);
             }
-            weights = fopen("o_weights.txt", "r");
+            //weights = fopen("o_weights.txt", "r");
+            i=0;
             neurons = getNeurons(layer);
             while(neurons != NULL){
                 Neuron neuron = get(neurons);
@@ -64,11 +110,13 @@ void addLayer(NeuralNetwork neuralNetwork, Layer layer){
                 while(hiddenNeurons != NULL){
                     Neuron hiddenNeuron = get(hiddenNeurons);
                     double weight;
-                    fgets(line, 80, weights);
-                    sscanf(line, "%lf", &weight);
+                    //fgets(line, 80, weights);
+                    //sscanf(line, "%lf", &weight);
+                    weight = o_weights[i];
                     Edge e = createEdge(weight, hiddenNeuron);
                     insertNeuronEdge(neuron, e);
                     hiddenNeurons = getProx(hiddenNeurons);
+                    i++;
                 }
                 neurons = getProx(neurons);
             }
