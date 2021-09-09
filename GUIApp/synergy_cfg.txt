@@ -130,7 +130,7 @@ Synergy Configuration
       P404 5 RMII_MDIO Ethernet_Controller_1_RMII_ET1_MDIO Low - "Peripheral mode" CMOS None "ETHERC_MII0: MDIO; ETHERC_RMII0: MDIO; GPT3: GTIOCB; PDC0: PIXD6; RTC0: RTCIC2; SSI0: SSIWS" 
       P405 6 RMII_TXD_EN Ethernet_Controller_1_RMII_RMII1_TXD_EN Low - "Peripheral mode" CMOS None "ETHERC_MII0: TX_EN; ETHERC_RMII0: TXD_EN; GPT1: GTIOCA; PDC0: PIXD5; SSI0: SSITXD" 
       P406 7 RMII_TXD1 Ethernet_Controller_1_RMII_RMII1_TXD1 Low - "Peripheral mode" CMOS None "ETHERC_MII0: RX_ER; ETHERC_RMII0: TXD1; GPT1: GTIOCB; PDC0: PIXD4; SSI0: SSIRXD" 
-      P407 44 USBFS0_VBUS USB_Full_Speed_USB0_VBUS Low - "Peripheral mode" CMOS None "ADC0: ADTRG; CTSU0: TS03; ETHERC_MII0: EXOUT; ETHERC_RMII0: EXOUT; IIC0: SDA; RTC0: RTCOUT; SCI4: CTS; SPI1: SSL3; USB_FS0: VBUS" 
+      P407 44 - - - - Disabled - - "ADC0: ADTRG; CTSU0: TS03; ETHERC_MII0: EXOUT; ETHERC_RMII0: EXOUT; IIC0: SDA; RTC0: RTCOUT; SCI4: CTS; SPI1: SSL3; USB_FS0: VBUS" 
       P408 43 CTSU0_TS04 Cap_Touch_Sensing_Unit_TS04 Low None "Peripheral mode" CMOS None "CTSU0: TS04; ETHERC_MII0: CRS; ETHERC_RMII0: CRS_DV; GPT_OPS0: GTOWLO; GPT10: GTIOCB; ICU0: IRQ07; SCI3: RXD; SCI3: SCL; USB_FS0: ID; USB_HS0: ID" 
       P409 42 CTSU0_TS05 Cap_Touch_Sensing_Unit_TS05 Low None "Peripheral mode" CMOS None "CTSU0: TS05; ETHERC_MII0: RX_CLK; ETHERC_RMII0: RX_ER; GPT_OPS0: GTOWUP; GPT10: GTIOCA; ICU0: IRQ06; SCI3: SDA; SCI3: TXD; USB_FS0: EXICEN; USB_HS0: EXICEN" 
       P410 41 - - - - Disabled - - "AGT1: AGTOB; CTSU0: TS06; ETHERC_MII0: ERXD0; ETHERC_RMII0: RXD1; GPT_OPS0: GTOVLO; GPT9: GTIOCB; ICU0: IRQ05; SCI0: RXD; SCI0: SCL; SCI3: SCK; SDHI0: DAT1; SPI0: MISO" 
@@ -308,6 +308,27 @@ Synergy Configuration
     
   Module "Touch Panel Driver on touch_panel_sx8654"
   Module "JPEG Common"
+  Module "USBX Interface Configuration Mass Storage Class"
+  Module "USBX on ux"
+  Module "USBX Port DCD on sf_el_ux for USBFS"
+    Full Speed Interrupt Priority: Priority 6
+    LDO Regulator(Only for S3 and S1 part MCUs): Disable
+    
+  Module "USBX Device Configuration"
+    Composite Device: Disable
+    
+  Module "USBX Device Class Mass Storage"
+  Module "FileX Common on fx"
+  Module "USBX Port HCD on sf_el_ux for USBHS"
+    High Speed Interrupt Priority: Priority 5
+    FIFO size for Bulk/Isochronous Pipes: 512 bytes(default)
+    Number of Isochronous Pipes Reserved: 0(default)
+    VBUSEN pin Signal Logic: Active Low
+    Enable High Speed: Enable
+    
+  Module "USBX Host Configuration"
+  Module "USBX Host Class Mass Storage"
+  Module "FileX on USB Mass Storage"
   HAL
     Instance "g_ioport I/O Port Driver on r_ioport"
       Name [Fixed]: g_ioport
@@ -681,6 +702,109 @@ Synergy Configuration
     Object "g_main_semaphore_lcdc Semaphore"
       Name: Main Semaphore
       Symbol: g_main_semaphore_lcdc
+      Initial count: 0
+      
+  Thread "USB Thread"
+    Symbol: usb_thread
+    Name: USB Thread
+    Stack size (bytes): 1024
+    Priority: 1
+    Auto start: Enabled
+    Time slicing interval (ticks): 1
+    
+    Instance "g_fx_media FileX on USB Mass Storage"
+      Name: g_fx_media
+      Name of FileX Media Control block initialization: fx_media_init_function
+      Auto Media Initialization: Disable
+      Timeout ticks for Media Initialization (Specify 0 if no need of thread suspension): 2
+      
+      Instance "g_ux_host_class_storage USBX Host Class Mass Storage"
+        Name: g_ux_host_class_storage
+        
+        Instance "USBX Host Configuration g_ux_host"
+          Name: g_ux_host
+          Name of generated initialization function: ux_host_init0
+          Auto Initialization: Enable
+          
+          Instance "g_sf_el_ux_hcd_hs USBX Port HCD on sf_el_ux for USBHS"
+            Name: g_sf_el_ux_hcd_hs
+            USB Controller Selection: USBHS
+            
+          Instance "USBX on ux"
+            USBX Pool Memory Name: g_ux_pool_memory
+            USBX Pool Memory Size: 81920
+            User Callback for Host Event Notification(Only valid for USB Host): ux_host_event_user
+            User Callback for Device Event Notification(Only valid for USB Device): NULL
+            Name of generated initialization function: ux_common_init
+            Auto Initialization: Enable
+            
+      Instance "FileX Common on fx"
+        Name of generated initialization function: fx_common_init0
+        Auto Initialization: Enable
+        
+    Instance "g_ux_msd USBX Device Class Mass Storage"
+      Name: g_ux_msd
+      Mass Storage Class Parameter Setup: Manual (User Manual Setup if LUN is greater than 1)
+      User Setup Callback (Only valid if Parameter Setup is Manual): ux_msd_setup
+      Last LBA of Storage Media (Only valid if Parameter Setup is Auto): 0
+      Bytes Per Sector of Storage Media (Only valid if Parameter Setup is Auto): 512
+      Type of Storage Media (Only valid if Parameter Setup is Auto): 0
+      Removable Flag of Storage Media (Only valid if Parameter Setup is Auto): 0x80
+      Media Read Function Callback (Only valid if Parameter Setup is Auto): ux_msd_read
+      Media Write Function Callback (Only valid if Parameter Setup is Auto): ux_msd_write
+      Media Status Function Callback (Only valid if Parameter Setup is Auto): ux_msd_status
+      USBX Device Storage Instance Activate Callback Function: NULL
+      USBX Device Storage Instance Deactivate Callback Function: NULL
+      Vendor ID Name: NULL
+      Product ID Name: NULL
+      Product Revision Number: NULL
+      Product Serial Number: NULL
+      Name of generated initialization function: ux_msd_init
+      Auto Initialization: Disable
+      
+      Instance "USBX Device Configuration"
+        Vendor ID: 0x045B
+        Product ID: 0x0001
+        Device Release Number: 0x0000
+        Index of Manufacturer String Descriptor: 0x00
+        Index of Product String Descriptor: 0x00
+        Index of Serial Number String Descriptor: 0x00
+        Class Code: Mass Storage
+        Index of String Descriptor describing this configuration: 0x00
+        Size of USB Descriptor in bytes for this configuration (Modify this value only for Vendor-specific Class, otherwise set zero): 0x00
+        Number of Interfaces (Modify this value only for Vendor-specific Class, otherwise set zero): 0x00
+        Self-Powered: Enable
+        Remote Wakeup: Disable
+        Maximum Power Consumption (in 2mA units): 50
+        Supported Language Code: 0x0409
+        Name of USBX String Framework: NULL
+        Total index number of USB String Descriptors in USBX String Framework: 0
+        Name of USBX Language Framework: NULL
+        Number of Languages to support (US English is applied if zero is set): 0
+        Name of generated initialization function: ux_device_init
+        Auto Initialization: Enable
+        
+        Instance "g_sf_el_ux_dcd_fs USBX Port DCD on sf_el_ux for USBFS"
+          Name: g_sf_el_ux_dcd_fs
+          USB Controller Selection: USBFS
+          
+        Instance "USBX on ux"
+          USBX Pool Memory Name: g_ux_pool_memory
+          USBX Pool Memory Size: 81920
+          User Callback for Host Event Notification(Only valid for USB Host): ux_host_event_user
+          User Callback for Device Event Notification(Only valid for USB Device): NULL
+          Name of generated initialization function: ux_common_init
+          Auto Initialization: Enable
+          
+      Instance "g_usb_interface_descriptor_storage_0 USBX Interface Configuration Mass Storage Class"
+        Name: g_usb_interface_descriptor_storage_0
+        Interface Number of Bulk-Only Data Interface: 0x00
+        Endpoint Number to be used for Bulk Out transfer: Endpoint 1
+        Endpoint Number to be used for Bulk In transfer: Endpoint 2
+        
+    Object "g_usb_media_sema Semaphore"
+      Name: USB Media Semaphore
+      Symbol: g_usb_media_sema
       Initial count: 0
       
   Messaging

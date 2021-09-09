@@ -65,7 +65,6 @@
   <v1:configSetting altId="sci0.sck.p102" configurationId="sci0.sck">
     <v1:connectionSetting altId="p102.sci0.sck"/>
   </v1:configSetting>
-  <v1:configSetting altId="p407.gpio_mode.gpio_mode_peripheral" configurationId="p407.gpio_mode"/>
   <v1:configSetting altId="glcdc0.lcd_tcon2.p313" configurationId="glcdc0.lcd_tcon2">
     <v1:connectionSetting altId="p313.glcdc0.lcd_tcon2"/>
   </v1:configSetting>
@@ -285,9 +284,6 @@
   </v1:configSetting>
   <v1:configSetting altId="p400.input" configurationId="p400"/>
   <v1:configSetting altId="p202.gpio_mode.gpio_mode_peripheral" configurationId="p202.gpio_mode"/>
-  <v1:configSetting altId="p407.usbfs0.vbus" configurationId="p407">
-    <v1:connectionSetting altId="usbfs0.vbus.p407"/>
-  </v1:configSetting>
   <v1:configSetting altId="p406.etherc1.rmii.txd1" configurationId="p406">
     <v1:connectionSetting altId="etherc1.rmii.txd1.p406"/>
   </v1:configSetting>
@@ -517,9 +513,7 @@
   <v1:configSetting altId="p105.sci8.txd" configurationId="p105">
     <v1:connectionSetting altId="sci8.txd.p105"/>
   </v1:configSetting>
-  <v1:configSetting altId="usbfs0.vbus.p407" configurationId="usbfs0.vbus">
-    <v1:connectionSetting altId="p407.usbfs0.vbus"/>
-  </v1:configSetting>
+  <v1:configSetting altId="usbfs0.vbus.none" configurationId="usbfs0.vbus"></v1:configSetting>
   <v1:configSetting altId="p104.sci8.rxd" configurationId="p104">
     <v1:connectionSetting altId="sci8.rxd.p104"/>
   </v1:configSetting>
@@ -668,7 +662,6 @@
   <v1:propertySetting propertyId="p504.symbolic_name" value="Quad_SPI_QIO2"/>
   <v1:propertySetting propertyId="p309.symbolic_name" value="GPIO34"/>
   <v1:propertySetting propertyId="p500.symbolic_name" value="Quad_SPI_QSPCLK"/>
-  <v1:propertySetting propertyId="p407.symbolic_name" value="USB_Full_Speed_USB0_VBUS"/>
   <v1:propertySetting propertyId="p406.symbolic_name" value="Ethernet_Controller_1_RMII_RMII1_TXD1"/>
   <v1:propertySetting propertyId="p403.symbolic_name" value="Ethernet_Controller_1_RMII_ET1_MDC"/>
   <v1:propertySetting propertyId="p613.symbolic_name" value="GPIO37"/>
@@ -976,4 +969,5 @@
   <v1:configSetting configurationId="usbdp" altId="usbdp.usbfs0.usbdp">
     <v1:connectionSetting altId="usbfs0.dp.usbdp"/>
   </v1:configSetting>
+  <v1:configSetting configurationId="usbfs0.ovrcura" altId="usbfs0.ovrcura.none"/>
 </v1:pinSettings>
