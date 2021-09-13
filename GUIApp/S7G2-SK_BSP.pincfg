@@ -513,7 +513,7 @@
   <v1:configSetting altId="p105.sci8.txd" configurationId="p105">
     <v1:connectionSetting altId="sci8.txd.p105"/>
   </v1:configSetting>
-  <v1:configSetting altId="usbfs0.vbus.none" configurationId="usbfs0.vbus"></v1:configSetting>
+  <v1:configSetting altId="usbfs0.vbus.none" configurationId="usbfs0.vbus"/>
   <v1:configSetting altId="p104.sci8.rxd" configurationId="p104">
     <v1:connectionSetting altId="sci8.rxd.p104"/>
   </v1:configSetting>
