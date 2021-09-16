@@ -6,7 +6,7 @@
 /*  GUIX Studio User Guide, or visit our web site at azure.com/rtos            */
 /*                                                                             */
 /*  GUIX Studio Revision 6.1.8.1                                               */
-/*  Date (dd.mm.yyyy): 26. 8.2021   Time (hh:mm): 11:04                        */
+/*  Date (dd.mm.yyyy): 14. 9.2021   Time (hh:mm): 09:37                        */
 /*******************************************************************************/
 
 
@@ -178,6 +178,38 @@ GX_PROMPT_PROPERTIES window1_P_RESULT_properties =
     GX_COLOR_ID_SELECTED_TEXT,               /* selected text color            */
     GX_COLOR_ID_DISABLED_TEXT                /* disabled text color            */
 };
+GX_PROMPT_PROPERTIES window1_TXT_IP_properties =
+{
+    0,                                       /* string id                      */
+    GX_FONT_ID_PROMPT,                       /* font id                        */
+    GX_COLOR_ID_TEXT,                        /* normal text color              */
+    GX_COLOR_ID_SELECTED_TEXT,               /* selected text color            */
+    GX_COLOR_ID_DISABLED_TEXT                /* disabled text color            */
+};
+
+GX_CONST GX_STUDIO_WIDGET window1_TXT_IP_define =
+{
+    "TXT_IP",
+    GX_TYPE_PROMPT,                          /* widget type                    */
+    TXT_IP,                                  /* widget id                      */
+    #if defined(GX_WIDGET_USER_DATA)
+    0,                                       /* user data                      */
+    #endif
+    GX_STYLE_BORDER_THIN|GX_STYLE_ENABLED|GX_STYLE_TEXT_CENTER,   /* style flags */
+    GX_STATUS_ACCEPTS_FOCUS,                 /* status flags                   */
+    sizeof(GX_PROMPT),                       /* control block size             */
+    GX_COLOR_ID_WIDGET_FILL,                 /* normal color id                */
+    GX_COLOR_ID_SELECTED_FILL,               /* selected color id              */
+    GX_COLOR_ID_DISABLED_FILL,               /* disabled color id              */
+    gx_studio_prompt_create,                 /* create function                */
+    GX_NULL,                                 /* drawing function override      */
+    GX_NULL,                                 /* event function override        */
+    {27, 9, 203, 45},                        /* widget size                    */
+    GX_NULL,                                 /* no next widget                 */
+    GX_NULL,                                 /* no child widgets               */ 
+    offsetof(WINDOW1_CONTROL_BLOCK, window1_TXT_IP), /* control block          */
+    (void *) &window1_TXT_IP_properties      /* extended properties            */
+};
 
 GX_CONST GX_STUDIO_WIDGET window1_P_RESULT_define =
 {
@@ -196,8 +228,8 @@ GX_CONST GX_STUDIO_WIDGET window1_P_RESULT_define =
     gx_studio_prompt_create,                 /* create function                */
     GX_NULL,                                 /* drawing function override      */
     GX_NULL,                                 /* event function override        */
-    {5, 235, 233, 313},                      /* widget size                    */
-    GX_NULL,                                 /* no next widget                 */
+    {5, 261, 233, 313},                      /* widget size                    */
+    &window1_TXT_IP_define,                  /* next widget definition         */
     GX_NULL,                                 /* no child widgets               */ 
     offsetof(WINDOW1_CONTROL_BLOCK, window1_P_RESULT), /* control block        */
     (void *) &window1_P_RESULT_properties    /* extended properties            */
@@ -220,7 +252,7 @@ GX_CONST GX_STUDIO_WIDGET window1_BTN_RUN_define =
     gx_studio_text_button_create,            /* create function                */
     GX_NULL,                                 /* drawing function override      */
     GX_NULL,                                 /* event function override        */
-    {33, 166, 208, 215},                     /* widget size                    */
+    {29, 202, 204, 251},                     /* widget size                    */
     &window1_P_RESULT_define,                /* next widget definition         */
     GX_NULL,                                 /* no child widgets               */ 
     offsetof(WINDOW1_CONTROL_BLOCK, window1_BTN_RUN), /* control block         */
@@ -244,7 +276,7 @@ GX_CONST GX_STUDIO_WIDGET window1_CK_ECG2_define =
     gx_studio_radio_button_create,           /* create function                */
     GX_NULL,                                 /* drawing function override      */
     GX_NULL,                                 /* event function override        */
-    {76, 119, 170, 142},                     /* widget size                    */
+    {71, 158, 165, 181},                     /* widget size                    */
     &window1_BTN_RUN_define,                 /* next widget definition         */
     GX_NULL,                                 /* no child widgets               */ 
     offsetof(WINDOW1_CONTROL_BLOCK, window1_CK_ECG2), /* control block         */
@@ -268,7 +300,7 @@ GX_CONST GX_STUDIO_WIDGET window1_CK_ECG1_define =
     gx_studio_radio_button_create,           /* create function                */
     GX_NULL,                                 /* drawing function override      */
     GX_NULL,                                 /* event function override        */
-    {76, 90, 164, 113},                      /* widget size                    */
+    {71, 127, 159, 150},                     /* widget size                    */
     &window1_CK_ECG2_define,                 /* next widget definition         */
     GX_NULL,                                 /* no child widgets               */ 
     offsetof(WINDOW1_CONTROL_BLOCK, window1_CK_ECG1), /* control block         */
@@ -292,7 +324,7 @@ GX_CONST GX_STUDIO_WIDGET window1_BTN_START_define =
     gx_studio_text_button_create,            /* create function                */
     GX_NULL,                                 /* drawing function override      */
     GX_NULL,                                 /* event function override        */
-    {33, 12, 208, 61},                       /* widget size                    */
+    {31, 57, 206, 106},                      /* widget size                    */
     &window1_CK_ECG1_define,                 /* next widget definition         */
     GX_NULL,                                 /* no child widgets               */ 
     offsetof(WINDOW1_CONTROL_BLOCK, window1_BTN_START), /* control block       */

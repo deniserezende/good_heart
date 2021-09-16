@@ -213,6 +213,26 @@
       <description>Express Logic NetX DHCP: Provides=[NetX DHCP] , Requires=[NetX]</description>
       <originalPack>Renesas.Synergy.2.0.0.pack</originalPack>
     </component>
+    <component apiversion="" class="Framework Services" condition="" group="all" subgroup="sf_el_ux" variant="" vendor="Renesas" version="2.0.0">
+      <description>Express Logic USBX Synergy Port: Provides=[USBX Driver] , Requires=[USBX ,Transfer]</description>
+      <originalPack>Renesas.Synergy.2.0.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="Express Logic" condition="" group="all" subgroup="fx" variant="" vendor="Renesas" version="2.0.0">
+      <description>Express Logic FileX: Provides=[FileX] , Requires=[FileX I/O ,ThreadX]</description>
+      <originalPack>Renesas.Synergy.2.0.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="Express Logic" condition="" group="all" subgroup="ux" variant="" vendor="Renesas" version="2.0.0">
+      <description>Express Logic USBX: Provides=[USBX] , Requires=[ThreadX ,USBX Driver]</description>
+      <originalPack>Renesas.Synergy.2.0.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="Express Logic" condition="" group="all" subgroup="ux_device_class_storage" variant="" vendor="Renesas" version="2.0.0">
+      <description>Express Logic USBX Device Class Storage: Provides=[USBX Device Class Storage] , Requires=[ThreadX ,USBX]</description>
+      <originalPack>Renesas.Synergy.2.0.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="Express Logic" condition="" group="all" subgroup="ux_host_class_storage" variant="" vendor="Renesas" version="2.0.0">
+      <description>Express Logic USBX Host Class Storage: Provides=[USBX Host Class Storage] , Requires=[ThreadX ,USBX]</description>
+      <originalPack>Renesas.Synergy.2.0.0.pack</originalPack>
+    </component>
   </synergyComponentSelection>
   <synergyIcuConfiguration/>
   <synergyMessagingConfiguration>
@@ -673,6 +693,88 @@
       <property id="module.framework.sf_el_nx.mac_update_callback" value="NULL"/>
       <property id="module.framework.sf_el_nx.receive_callback" value="NULL"/>
     </module>
+    <module id="module.el.ux.interface_descriptor_storage.627791655">
+      <property id="module.el.ux.interface_descriptor_storage.name" value="g_usb_interface_descriptor_storage_0"/>
+      <property id="module.el.ux.interface_descriptor_storage.bInterfaceNumber" value="0x00"/>
+      <property id="module.el.ux.interface_descriptor_storage.ep_bulk_out" value="module.el.ux.interface_descriptor_storage.ep_bulk_out.ep1"/>
+      <property id="module.el.ux.interface_descriptor_storage.ep_bulk_in" value="module.el.ux.interface_descriptor_storage.ep_bulk_in.ep2"/>
+    </module>
+    <module id="module.el.ux_v2.939380682">
+      <property id="module.el.ux_v2.pool_memory_name" value="g_ux_pool_memory"/>
+      <property id="module.el.ux_v2.pool_memory_size" value="81920"/>
+      <property id="module.el.ux_v2.system_change_function" value="ux_host_event_user"/>
+      <property id="module.el.ux_v2.slave_change_function" value="NULL"/>
+      <property id="module.el.ux_v2.init_function" value="ux_common_init"/>
+      <property id="module.el.ux_v2.init" value="module.el.ux_v2.init.enable"/>
+    </module>
+    <module id="module.framework.sf_el_ux_dcd_fs.215593058">
+      <property id="module.framework.sf_el_ux_dcd_fs.name" value="g_sf_el_ux_dcd_fs"/>
+      <property id="module.framework.sf_el_ux_dcd_fs.hw_address" value="module.framework.sf_el_ux_dcd_fs.hw_address.fs"/>
+    </module>
+    <module id="module.el.ux_device.797186263">
+      <property id="module.el.ux_device.idVendor" value="0x045B"/>
+      <property id="module.el.ux_device.idProduct" value="0x0001"/>
+      <property id="module.el.ux_device.bcdDevice" value="0x0000"/>
+      <property id="module.el.ux_device.iManufacturer" value="0x00"/>
+      <property id="module.el.ux_device.iProduct" value="0x00"/>
+      <property id="module.el.ux_device.iSerialNumber" value="0x00"/>
+      <property id="module.el.ux_device.bDeviceClass" value="module.el.ux_device.bDeviceClass.msc"/>
+      <property id="module.el.ux_device.iConfiguration" value="0x00"/>
+      <property id="module.el.ux_device.wTotalLength" value="0x00"/>
+      <property id="module.el.ux_device.bNumInterfaces" value="0x00"/>
+      <property id="module.el.ux_device.bmAttributes_bit6" value="module.el.ux_device.bmAttributes_bit6.enable"/>
+      <property id="module.el.ux_device.bmAttributes_bit5" value="module.el.ux_device.bmAttributes_bit5.disable"/>
+      <property id="module.el.ux_device.bMaxPower" value="50"/>
+      <property id="module.el.ux_device.language_code" value="0x0409"/>
+      <property id="module.el.ux_device.string_descriptor.name" value="NULL"/>
+      <property id="module.el.ux_device.string_descriptor.index" value="0"/>
+      <property id="module.el.ux_device.language_descriptor.name" value="NULL"/>
+      <property id="module.el.ux_device.language_descriptor.number" value="0"/>
+      <property id="module.el.ux_device.init_function" value="ux_device_init"/>
+      <property id="module.el.ux_device.init" value="module.el.ux_device.init.enable"/>
+    </module>
+    <module id="module.el.ux_device_class_storage.178564791">
+      <property id="module.el.ux_device_class_storage.name" value="g_ux_msd"/>
+      <property id="module.el.ux.interface_descriptor_storage.autosetup" value="module.el.ux.interface_descriptor_storage.autosetup.disable"/>
+      <property id="module.el.ux_device_class_storage.pfunc_user_setup" value="ux_msd_setup"/>
+      <property id="module.el.ux_device_class_storage.last_lba" value="0"/>
+      <property id="module.el.ux_device_class_storage.sector_size" value="512"/>
+      <property id="module.el.ux_device_class_storage.media_type" value="0"/>
+      <property id="module.el.ux_device_class_storage.removable_flag" value="0x80"/>
+      <property id="module.el.ux_device_class_storage.pfunc_media_read" value="ux_msd_read"/>
+      <property id="module.el.ux_device_class_storage.pfunc_media_write" value="ux_msd_write"/>
+      <property id="module.el.ux_device_class_storage.pfunc_media_status" value="ux_msd_status"/>
+      <property id="module.el.ux_device_class_storage.pfunc_activate_callback" value="NULL"/>
+      <property id="module.el.ux_device_class_storage.pfunc_deactivate_callback" value="NULL"/>
+      <property id="module.el.ux_device_class_storage.vendor_id_name" value="NULL"/>
+      <property id="module.el.ux_device_class_storage.product_id_name" value="NULL"/>
+      <property id="module.el.ux_device_class_storage.product_revision_num" value="NULL"/>
+      <property id="module.el.ux_device_class_storage.product_serial_num" value="NULL"/>
+      <property id="module.el.ux_device_class_storage.init_function" value="ux_msd_init"/>
+      <property id="module.el.ux_device_class_storage.init" value="module.el.ux_device_class_storage.init.disable"/>
+    </module>
+    <module id="module.el.fx_common.1025032275">
+      <property id="module.el.fx_common.init_function" value="fx_common_init0"/>
+      <property id="module.el.fx_common.init" value="module.el.fx_common.init.enable"/>
+    </module>
+    <module id="module.framework.sf_el_ux_hcd_hs.1689626359">
+      <property id="module.framework.sf_el_ux_hcd.name" value="g_sf_el_ux_hcd_hs"/>
+      <property id="module.framework.sf_el_ux_hcd.hw_address" value="module.framework.sf_el_ux_hcd.hw_address.hs"/>
+    </module>
+    <module id="module.el.ux_host.1540246952">
+      <property id="module.el.ux_host.name" value="g_ux_host"/>
+      <property id="module.el.ux_host.init_function" value="ux_host_init0"/>
+      <property id="module.el.ux_host.init" value="module.el.ux_host.init.enable"/>
+    </module>
+    <module id="module.el.ux_host_class_storage.56108545">
+      <property id="module.el.host_class.name" value="g_ux_host_class_storage"/>
+    </module>
+    <module id="module.framework.fx_usbmsc.378809553">
+      <property id="module.framework.fx.name" value="g_fx_media"/>
+      <property id="module.framework.fx.init_function" value="fx_media_init_function"/>
+      <property id="module.framework.fx_usbmsc.media_init" value="module.framework.fx_usbmsc.media_init.disable"/>
+      <property id="module.framework.fx_usbmsc.init_timeout" value="2"/>
+    </module>
     <context id="_hal.0">
       <stack module="module.driver.ioport_on_ioport.918725209"/>
       <stack module="module.driver.cgc_on_cgc.1335811009"/>
@@ -738,8 +840,41 @@
         <stack module="module.el.nx_dhcp_common.1499303300" requires="module.el.nx_dhcp_client.requires.nx_dhcp_common"/>
       </stack>
     </context>
+    <context id="rtos.threadx.thread.1819630419">
+      <property id="_symbol" value="usb_thread1"/>
+      <property id="rtos.threadx.thread.name" value="USB Thread"/>
+      <property id="rtos.threadx.thread.stack" value="1536"/>
+      <property id="rtos.threadx.thread.priority" value="5"/>
+      <property id="rtos.threadx.thread.autostart" value="rtos.threadx.thread.autostart.enabled"/>
+      <property id="rtos.threadx.thread.timeslice" value="1"/>
+      <stack module="module.framework.fx_usbmsc.378809553">
+        <stack module="module.el.ux_host_class_storage.56108545" requires="module.framework.fx_usbmsc.requires.ux_host_class_storage">
+          <stack module="module.el.ux_host.1540246952" requires="module.el.ux_host_class_storage.requires.ux_host">
+            <stack module="module.framework.sf_el_ux_hcd_hs.1689626359" requires="module.el.ux_host.requires.sf_el_ux_hcd"/>
+            <stack module="module.el.ux_v2.939380682" requires="module.el.ux_host.requires.ux_v2"/>
+          </stack>
+        </stack>
+        <stack module="module.el.fx_common.1025032275" requires="module.framework.fx_usbmsc.requires.fx_common"/>
+      </stack>
+      <stack module="module.el.ux_device_class_storage.178564791">
+        <stack module="module.el.ux_device.797186263" requires="module.el.ux_device_class_storage.requires.ux_device">
+          <stack module="module.framework.sf_el_ux_dcd_fs.215593058" requires="module.el.ux_device.requires.sf_el_ux_dcd"/>
+          <stack module="module.el.ux_v2.939380682" requires="module.el.ux_device.requires.ux_v2"/>
+        </stack>
+        <stack module="module.el.ux.interface_descriptor_storage.627791655" requires="module.el.ux_device_class_storage.requires.interface_descriptor_storage"/>
+      </stack>
+      <object id="rtos.threadx.object.semaphore.1482097204">
+        <property id="rtos.threadx.object.semaphore.name" value="New Semaphore"/>
+        <property id="rtos.threadx.object.semaphore.symbol" value="g_usb_media_sema"/>
+        <property id="rtos.threadx.object.semaphore.count" value="0"/>
+      </object>
+    </context>
     <config id="config.driver.jpeg_decode">
       <property id="config.driver.jpeg_decode.param_checking_enable" value="config.driver.jpeg_decode.param_checking_enable.enabled"/>
+    </config>
+    <config id="config.el.ux_v2"/>
+    <config id="config.el.ux_device">
+      <property id="config.el.ux_device.composite" value="config.el.ux_device.composite.disable"/>
     </config>
     <config id="config.el.nx_dhcp_client">
       <property id="config.el.nx_dhcp_client.priority" value="3"/>
@@ -763,6 +898,7 @@
       <property id="config.el.nx_dhcp_client.max_records" value="1"/>
       <property id="config.el.nx_dhcp_client.restart_wait" value="10"/>
     </config>
+    <config id="config.el.ux_host_class_storage"/>
     <config id="config.driver.glcd">
       <property id="config.driver.glcd.param_checking_enable" value="config.driver.glcd.param_checking_enable.enabled"/>
     </config>
@@ -829,6 +965,30 @@
       <property id="config.el.nx_telnet_common.telnet_server_port" value="23"/>
       <property id="config.el.nx_telnet_common.time_to_live" value="128"/>
     </config>
+    <config id="config.framework.sf_el_ux">
+      <property id="config.framework.sf_el_ux.VBUSENpin_logic" value="config.framework.sf_el_ux.VBUSENpin_logic.active_high"/>
+      <property id="config.framework.sf_el_ux.hs_irq_ipl" value="board.icu.common.irq.disabled"/>
+      <property id="config.framework.sf_el_ux.fs_irq_ipl" value="board.icu.common.irq.disabled"/>
+    </config>
+    <config id="config.framework.sf_el_ux_hcd_hs">
+      <property id="config.framework.sf_el_ux_hcd_hs.irq_ipl" value="board.icu.common.irq.priority5"/>
+      <property id="config.framework.sf_el_ux_hcd_hs.fifo_size" value="config.framework.sf_el_ux_hcd_hs.fifo_size.normal"/>
+      <property id="config.framework.sf_el_ux_hcd_hs.bulk_pipe_start_index" value="config.framework.sf_el_ux_hcd_hs.bulk_pipe_start_index.pipe1"/>
+      <property id="config.framework.sf_el_ux_hcd_hs.VBUSENpin_logic" value="config.framework.sf_el_ux_hcd_hs.VBUSENpin_logic.active_low"/>
+      <property id="config.framework.sf_el_ux_hcd_hs.hs_bit" value="config.framework.sf_el_ux_hcd_hs.hs_bit.bitset_high"/>
+    </config>
+    <config id="config.framework.sf_el_ux_hcd_fs">
+      <property id="config.framework.sf_el_ux_hcd_fs.irq_ipl" value="board.icu.common.irq.disabled"/>
+      <property id="config.framework.sf_el_ux_hcd_fs.VBUSENpin_logic" value="config.framework.sf_el_ux_hcd_fs.VBUSENpin_logic.active_high"/>
+      <property id="config.framework.sf_el_ux_hcd_fs.VCC_LDO_Regulator" value="config.framework.sf_el_ux_hcd_fs.VCC_LDO_Regulator.disabled"/>
+    </config>
+    <config id="config.framework.sf_el_ux_dcd_hs">
+      <property id="config.framework.sf_el_ux_dcd_hs.irq_ipl" value="board.icu.common.irq.disabled"/>
+    </config>
+    <config id="config.framework.sf_el_ux_dcd_fs">
+      <property id="config.framework.sf_el_ux_dcd_fs.irq_ipl" value="board.icu.common.irq.priority6"/>
+      <property id="config.framework.sf_el_ux_dcd_fs.VCC_LDO_Regulator" value="config.framework.sf_el_ux_dcd_fs.VCC_LDO_Regulator.disabled"/>
+    </config>
     <config id="config.driver.riic">
       <property id="config.driver.riic.param_checking_enable" value="config.driver.riic.param_checking_enable.enabled"/>
     </config>
@@ -843,6 +1003,7 @@
     <config id="config.framework.sf_touch_panel_i2c">
       <property id="config.framework.sf_touch_panel_i2c.param_checking_enable" value="config.framework.sf_touch_panel_i2c.param_checking_enable.enabled"/>
     </config>
+    <config id="config.el.ux_device_class_storage"/>
     <config id="config.el.gx">
       <property id="config.el.gx.enable_synergy_drw" value="config.el.gx.enable_synergy_drw.yes"/>
       <property id="config.el.gx.enable_synergy_jpeg" value="config.el.gx.enable_synergy_jpeg.yes"/>
@@ -861,6 +1022,7 @@
     <config id="config.framework.sf_jpeg_decode">
       <property id="config.framework.sf_jpeg_decode.param_checking_enable" value="config.framework.sf_jpeg_decode.param_checking_enable.enabled"/>
     </config>
+    <config id="config.el.fx"/>
     <config id="config.driver.sci_spi">
       <property id="config.driver.sci_spi.param_checking_enable" value="config.driver.sci_spi.param_checking_enable.enabled"/>
     </config>

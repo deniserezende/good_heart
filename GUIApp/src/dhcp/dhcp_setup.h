@@ -35,6 +35,8 @@
 /* Define the function to call for running a DHCP Client session. */
 UINT run_dhcp_client_session(NX_DHCP *client_ptr, NX_IP *ip_ptr);
 
+char* getIpText();
+
 
 /* If define, debug output sent to Renesas Virtual Console */
 #define SEMI_HOSTING

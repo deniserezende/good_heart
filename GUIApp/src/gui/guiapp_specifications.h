@@ -6,7 +6,7 @@
 /*  GUIX Studio User Guide, or visit our web site at azure.com/rtos            */
 /*                                                                             */
 /*  GUIX Studio Revision 6.1.8.1                                               */
-/*  Date (dd.mm.yyyy): 26. 8.2021   Time (hh:mm): 11:04                        */
+/*  Date (dd.mm.yyyy): 14. 9.2021   Time (hh:mm): 09:37                        */
 /*******************************************************************************/
 
 
@@ -28,6 +28,7 @@ extern   "C" {
 #define CK_ECG2 4
 #define BTN_RUN 5
 #define P_RESULT 6
+#define TXT_IP 7
 
 
 /* Define animation ids                                                        */
@@ -119,6 +120,7 @@ typedef struct WINDOW1_CONTROL_BLOCK_STRUCT
     GX_RADIO_BUTTON window1_CK_ECG2;
     GX_TEXT_BUTTON window1_BTN_RUN;
     GX_PROMPT window1_P_RESULT;
+    GX_PROMPT window1_TXT_IP;
 } WINDOW1_CONTROL_BLOCK;
 
 

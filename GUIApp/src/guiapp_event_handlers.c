@@ -6,9 +6,8 @@
 #include "neural_network/Layer.h"
 #include "neural_network/ECG.h"
 #include "neural_network/Lista.h"
+#include "dhcp/dhcp_setup.h"
 #include <stdio.h>
-
-#include "main_thread.h"
 
 NeuralNetwork neural_network = NULL;
 Layer input_layer, hidden_layer, output_layer = NULL;
@@ -34,6 +33,7 @@ UINT window1_handler(GX_WINDOW *widget, GX_EVENT *event_ptr)
     switch (event_ptr->gx_event_type)
     {
     case GX_SIGNAL(BTN_START, GX_EVENT_CLICKED):
+        update_prompt_text(widget->gx_widget_parent, TXT_IP, getIpText());
         if(neural_network == NULL){
             neural_network = createNeuralNetwork();
             input_layer = createLayer(NULL,8,INPUT);

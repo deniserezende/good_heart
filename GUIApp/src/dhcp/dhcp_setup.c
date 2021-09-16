@@ -1,4 +1,5 @@
 #include <dhcp/dhcp_setup.h>
+#include "main_thread.h"
 
 /* If semi hosting is defined, define the debug output
  * method using printf.
@@ -18,6 +19,19 @@ static UINT is_bound = NX_FALSE;
 /* Declare the DHCP Client state change callback. */
 static  VOID   my_notify_callback(NX_DHCP *dhcp_ptr, UCHAR new_state);
 
+char ip[20];
+
+
+static void update_text(GX_WIDGET * p_widget, GX_RESOURCE_ID id, char* text)
+{
+    GX_PROMPT * p_prompt = NULL;
+
+    ssp_err_t err = (ssp_err_t)gx_widget_find(p_widget, (USHORT)id, GX_SEARCH_DEPTH_INFINITE, (GX_WIDGET**)&p_prompt);
+    if (TX_SUCCESS == err)
+    {
+        gx_prompt_text_set(p_prompt, text);
+    }
+}
 
 /*
  * This function runs a DHCP Client session.
@@ -136,6 +150,8 @@ UINT run_dhcp_client_session(NX_DHCP *client_ptr, NX_IP *ip_ptr)
                             unsigned int b = (((unsigned int)client_address>>16)&0xff);
                             unsigned int c = ((( unsigned int)client_address>>8)&0xff);
                             unsigned int d = (((unsigned int)client_address)&0xff);
+                            sprintf(ip, "IP: %d.%d.%d.%d", a, b, c, d);
+
                             /* Debugger is connected */
                             printf("DHCP Client address is %d.%d.%d.%d \n", a, b, c, d);
                         }
@@ -222,6 +238,10 @@ VOID my_notify_callback(NX_DHCP *dhcp_ptr, UCHAR state)
         /* We have. Set the flag for the application. */
         is_bound = NX_TRUE;
     }
+}
+
+char* getIpText(){
+    return ip;
 }
 
 
