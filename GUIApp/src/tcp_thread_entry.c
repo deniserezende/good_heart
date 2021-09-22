@@ -1,9 +1,48 @@
 #include "tcp_thread.h"
 #include "dhcp/dhcp_setup.h"
+#include "tcp/MessageBody.h"
+#include "neural_network/Lista.h"
+#include "neural_network/ECG.h"
+#include "neural_network/NeuralNetwork.h"
+#include "neural_network/Layer.h"
+
+static FX_FILE g_file;
+char fileContent[4096];
+
+NeuralNetwork neural_network = NULL;
+Layer input_layer, hidden_layer, output_layer = NULL;
+
+Lista loadECGFile(int file){
+    UINT status;
+    ULONG actual_bytes;
+    char fileName[20];
+    sprintf(fileName, "%d.json", file);
+    status = fx_file_open(g_fx_media_ptr, &g_file, fileName, FX_OPEN_FOR_READ);
+    if (FX_SUCCESS != status)
+    {
+        __BKPT(0);
+    }
+
+    fx_file_read(&g_file, fileContent, 4096, &actual_bytes);
+    Lista list = JsonArrayToECG(fileContent);
+    status = fx_file_close(&g_file);
+    if (FX_SUCCESS != status)
+    {
+        __BKPT(0);
+    }
+
+    status = fx_media_flush(g_fx_media_ptr);
+    if (FX_SUCCESS != status)
+    {
+        __BKPT(0);
+    }
+
+    return list;
+}
 
 NX_TCP_SOCKET socket_echo;
 
-char data[100];
+char data[512];
 
 /* TCP Thread entry function */
 void tcp_thread_entry(void)
@@ -24,6 +63,16 @@ void tcp_thread_entry(void)
    /* Check for successful result. */
    if (status)
        error_counter++;
+
+   if(neural_network == NULL){
+       neural_network = createNeuralNetwork();
+       input_layer = createLayer(NULL,8,INPUT);
+       addLayer(neural_network, input_layer);
+       hidden_layer = createLayer("relu",4,HIDDEN);
+       addLayer(neural_network, hidden_layer);
+       output_layer = createLayer("sigmoid",1,OUTPUT);
+       addLayer(neural_network, output_layer);
+   }
 
 /* Create a socket.  */
   status =  nx_tcp_socket_create(&g_ip0, &socket_echo, "Echo Server Socket",
@@ -52,24 +101,64 @@ void tcp_thread_entry(void)
       if (status)
           error_counter++;
 
-      while(1)
-      {
+      while(1){
           /* Receive a TCP message from the socket.  */
           status =  nx_tcp_socket_receive(&socket_echo, &packet_ptr, NX_WAIT_FOREVER);
 
-          //nx_packet_data_extract_offset(packet_ptr, 0, &data, 100, &bytes_copied);
+          nx_packet_data_extract_offset(packet_ptr, 0, &data, 512, &bytes_copied);
 
-          /* Check for error.  */
-          if (status)
-          {
-              /* most likely got disconnected */
-              error_counter++;
-              break;
-          }
-          else
-          {
-              /* Echo back the received data this will also release the packet */
-              nx_tcp_socket_send(&socket_echo, packet_ptr, NX_WAIT_FOREVER);
+          MessageBody message = JsonToMessageBody(data);
+
+          char * response;
+
+          int ECGFileName;
+
+          Lista  list = NULL;
+
+          int A = 0, N = 0;
+
+          double nn_result;
+
+          switch (getOpCode(message)) {
+            case TEST_OP:
+                free(message);
+                message = createMessageBody();
+                setOpCode(message, RESPONSE_TEST_OP);
+
+                response = MessageBodyToJson(message);
+
+                nx_packet_allocate(&g_packet_pool0, &packet_ptr, NX_TCP_PACKET, NX_WAIT_FOREVER);
+                nx_packet_data_append(packet_ptr, response, strlen(response), &g_packet_pool0, NX_WAIT_FOREVER);
+                nx_tcp_socket_send(&socket_echo, packet_ptr, NX_WAIT_FOREVER);
+
+                free(message);
+                break;
+            case FILE_EVALUATION:
+                ECGFileName = getECGFile(message);
+                free(message);
+                message = createMessageBody();
+                setOpCode(message, RESPONSE_FILE_EVALUATION);
+
+                list = loadECGFile(ECGFileName);
+                if(neural_network != NULL && list != NULL){
+                    while(list != NULL){
+                        nn_result = executeNeuralNetwork(neural_network, get(list));
+                        nn_result>0.5 ? A++ : N++;
+                        list = getProx(list);
+                    }
+                    setGoodComplex(message, N);
+                    setBadComplex(message, A);
+                }
+                response = MessageBodyToJson(message);
+
+                nx_packet_allocate(&g_packet_pool0, &packet_ptr, NX_TCP_PACKET, NX_WAIT_FOREVER);
+                nx_packet_data_append(packet_ptr, response, strlen(response), &g_packet_pool0, NX_WAIT_FOREVER);
+                nx_tcp_socket_send(&socket_echo, packet_ptr, NX_WAIT_FOREVER);
+
+                free(message);
+                break;
+            default:
+                break;
           }
       }
       /* Disconnect the server socket.  */

@@ -1,6 +1,8 @@
 #include"ECG.h"
 #include<stdio.h>
 #include<stdlib.h>
+#include "json/cJSON.h"
+#include "Lista.h"
 
 typedef struct elemento{
     double P, Q, R, S, T, RR, QT, QRS;
@@ -59,3 +61,52 @@ double getQRSValue(ECG ecg){
     return e->QRS;
 }
 
+Lista JsonArrayToECG(char * str){
+    cJSON *jsonArray = cJSON_Parse(str);
+    if (jsonArray == NULL)
+    {
+        char *error_pointer = cJSON_GetErrorPtr();
+        printf("Error at position %i (%p)\n", (int)error_pointer - (int)str, (void*)error_pointer);
+        printf("Error before: %s\n", error_pointer);
+    }
+    cJSON *jsonItem = NULL;
+    Lista list = NULL;
+    int n = cJSON_GetArraySize(jsonArray);
+    cJSON_ArrayForEach(jsonItem, jsonArray) {
+        double P=-1, Q=-1, R=-1, S=-1, T=-1,  RR=-1, QT=-1, QRS=-1;
+        cJSON *obj = cJSON_GetObjectItemCaseSensitive(jsonItem, "P");
+        if (cJSON_IsNumber(obj)){
+            P = obj->valuedouble;
+        }
+        obj = cJSON_GetObjectItemCaseSensitive(jsonItem, "Q");
+        if (cJSON_IsNumber(obj)){
+            Q = obj->valuedouble;
+        }
+        obj = cJSON_GetObjectItemCaseSensitive(jsonItem, "R");
+        if (cJSON_IsNumber(obj)){
+            R = obj->valuedouble;
+        }
+        obj = cJSON_GetObjectItemCaseSensitive(jsonItem, "S");
+        if (cJSON_IsNumber(obj)){
+            S = obj->valuedouble;
+        }
+        obj = cJSON_GetObjectItemCaseSensitive(jsonItem, "T");
+        if (cJSON_IsNumber(obj)){
+            T = obj->valuedouble;
+        }
+        obj = cJSON_GetObjectItemCaseSensitive(jsonItem, "RR");
+        if (cJSON_IsNumber(obj)){
+            RR = obj->valuedouble;
+        }
+        obj = cJSON_GetObjectItemCaseSensitive(jsonItem, "QT");
+        if (cJSON_IsNumber(obj)){
+            QT = obj->valuedouble;
+        }
+        obj = cJSON_GetObjectItemCaseSensitive(jsonItem, "QRS");
+        if (cJSON_IsNumber(obj)){
+            QRS = obj->valuedouble;
+        }
+        list = inserir(list, createECG(P, Q, R, S, T, RR, QT, QRS));
+    }
+    return list;
+}

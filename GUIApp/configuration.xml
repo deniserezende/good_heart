@@ -46,9 +46,9 @@
       <property id="config.bsp.ssp.mcu.adc.max_freq_hz" value="60000000"/>
     </config>
     <config id="config.bsp.synergy">
-      <property id="config.bsp.common.main" value="0x1000"/>
+      <property id="config.bsp.common.main" value="0x2000"/>
       <property id="config.bsp.common.process" value="0"/>
-      <property id="config.bsp.common.heap" value="0x2000"/>
+      <property id="config.bsp.common.heap" value="0x6000"/>
       <property id="config.bsp.common.vcc" value="3300"/>
       <property id="config.bsp.common.avcc0" value="3300"/>
       <property id="config.bsp.common.checking" value="config.bsp.common.checking.enabled"/>
@@ -825,7 +825,7 @@
     <context id="rtos.threadx.thread.708328990">
       <property id="_symbol" value="tcp_thread"/>
       <property id="rtos.threadx.thread.name" value="TCP Thread"/>
-      <property id="rtos.threadx.thread.stack" value="1024"/>
+      <property id="rtos.threadx.thread.stack" value="2048"/>
       <property id="rtos.threadx.thread.priority" value="1"/>
       <property id="rtos.threadx.thread.autostart" value="rtos.threadx.thread.autostart.enabled"/>
       <property id="rtos.threadx.thread.timeslice" value="1"/>

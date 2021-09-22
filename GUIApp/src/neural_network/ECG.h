@@ -1,11 +1,12 @@
 #ifndef ECG_H
 #define ECG_H
-
+#include "Lista.h"
 /*
 Ponteiro que representa a estrutura de um eletrocardiograma (ECG).
 A estrutura possui os valores dos pontos fiduciais P-QRS-T e dos intervalos RR, QT e QRS.
 */
 typedef void * ECG;
+
 
 /*
 Cria um ECG e retorna o ponteiro da estrutura "ECG".
@@ -94,5 +95,7 @@ Retorna o valor do intervalo QRS do ECG passado por parametro.
     - retorno: Valor do intervalo QRS do ECG.
 */
 double getQRSValue(ECG ecg);
+
+Lista JsonArrayToECG(char * str);
 
 #endif

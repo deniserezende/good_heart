@@ -4,7 +4,7 @@
 TX_THREAD tcp_thread;
 void tcp_thread_create(void);
 static void tcp_thread_func(ULONG thread_input);
-static uint8_t tcp_thread_stack[1024] BSP_PLACE_IN_SECTION_V2(".stack.tcp_thread") BSP_ALIGN_VARIABLE_V2(BSP_STACK_ALIGNMENT);
+static uint8_t tcp_thread_stack[2048] BSP_PLACE_IN_SECTION_V2(".stack.tcp_thread") BSP_ALIGN_VARIABLE_V2(BSP_STACK_ALIGNMENT);
 void tx_startup_err_callback(void *p_instance, void *p_data);
 void tx_startup_common_init(void);
 #if defined(__ICCARM__)
@@ -117,7 +117,7 @@ void tcp_thread_create(void)
     /* Initialize each kernel object. */
 
     UINT err;
-    err = tx_thread_create (&tcp_thread, (CHAR*) "TCP Thread", tcp_thread_func, (ULONG) NULL, &tcp_thread_stack, 1024,
+    err = tx_thread_create (&tcp_thread, (CHAR*) "TCP Thread", tcp_thread_func, (ULONG) NULL, &tcp_thread_stack, 2048,
                             1, 1, 1, TX_AUTO_START);
     if (TX_SUCCESS != err)
     {
