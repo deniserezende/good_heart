@@ -7,6 +7,8 @@
 #define FILE_EVALUATION 100
 #define RESPONSE_FILE_EVALUATION 400
 
+#define GET_FILES 600
+
 typedef void * MessageBody;
 
 MessageBody createMessageBody();
@@ -32,5 +34,7 @@ void setBadComplex(MessageBody messageBody, int BadComplex);
 char * MessageBodyToJson(MessageBody messageBody);
 
 MessageBody JsonToMessageBody(char* string);
+
+char * getECGFiles();
 
 #endif

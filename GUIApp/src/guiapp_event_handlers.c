@@ -14,6 +14,8 @@ ECG ecg = NULL;
 char txt_result[100];
 double nn_result;
 
+GX_WINDOW * global_widget;
+
 //extern GX_WINDOW_ROOT * p_window_root;
 
 //static UINT show_window(GX_WINDOW * p_new, GX_WIDGET * p_widget, bool detach_old);
@@ -24,7 +26,9 @@ UINT window1_handler(GX_WINDOW *widget, GX_EVENT *event_ptr)
 {
     UINT result = gx_window_event_process(widget, event_ptr);
 
-    switch (event_ptr->gx_event_type)
+    global_widget = widget;
+
+    /*switch (event_ptr->gx_event_type)
     {
     case GX_SIGNAL(BTN_START, GX_EVENT_CLICKED):
         update_prompt_text(widget->gx_widget_parent, TXT_IP, getIpText());
@@ -52,7 +56,7 @@ UINT window1_handler(GX_WINDOW *widget, GX_EVENT *event_ptr)
     default:
         gx_window_event_process(widget, event_ptr);
         break;
-    }
+    }*/
 
     return result;
 }
@@ -69,6 +73,16 @@ static void update_prompt_text(GX_WIDGET * p_widget, GX_RESOURCE_ID id, char* te
     }
 }
 
+
+void setIP(char* ip){
+    update_prompt_text(global_widget, P_IP, ip);
+    gx_system_canvas_refresh();
+}
+
+void setConnection(){
+    update_prompt_text(global_widget, P_WAIT, "Conectado ao aplicativo!");
+    gx_system_canvas_refresh();
+}
 
 //show_window((GX_WINDOW*)&window2, (GX_WIDGET*)widget, true);
 /*UINT window2_handler(GX_WINDOW *widget, GX_EVENT *event_ptr)

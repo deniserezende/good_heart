@@ -5,6 +5,7 @@
 #include "neural_network/ECG.h"
 #include "neural_network/NeuralNetwork.h"
 #include "neural_network/Layer.h"
+#include "guiapp_event_handlers.h"
 
 static FX_FILE g_file;
 char fileContent[4096];
@@ -101,6 +102,8 @@ void tcp_thread_entry(void)
       if (status)
           error_counter++;
 
+      setConnection();
+
       while(1){
           /* Receive a TCP message from the socket.  */
           status =  nx_tcp_socket_receive(&socket_echo, &packet_ptr, NX_WAIT_FOREVER);
@@ -132,12 +135,14 @@ void tcp_thread_entry(void)
                 nx_tcp_socket_send(&socket_echo, packet_ptr, NX_WAIT_FOREVER);
 
                 free(message);
+                free(response);
                 break;
             case FILE_EVALUATION:
                 ECGFileName = getECGFile(message);
                 free(message);
                 message = createMessageBody();
                 setOpCode(message, RESPONSE_FILE_EVALUATION);
+                setECGFile(message, ECGFileName);
 
                 list = loadECGFile(ECGFileName);
                 if(neural_network != NULL && list != NULL){
@@ -156,6 +161,14 @@ void tcp_thread_entry(void)
                 nx_tcp_socket_send(&socket_echo, packet_ptr, NX_WAIT_FOREVER);
 
                 free(message);
+                free(response);
+                break;
+            case GET_FILES:
+                response = getECGFiles();
+                nx_packet_allocate(&g_packet_pool0, &packet_ptr, NX_TCP_PACKET, NX_WAIT_FOREVER);
+                nx_packet_data_append(packet_ptr, response, strlen(response), &g_packet_pool0, NX_WAIT_FOREVER);
+                nx_tcp_socket_send(&socket_echo, packet_ptr, NX_WAIT_FOREVER);
+                free(response);
                 break;
             default:
                 break;

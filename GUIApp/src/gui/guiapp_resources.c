@@ -6,7 +6,7 @@
 /*  Studio User Guide, or visit our web site at azure.com/rtos                 */
 /*                                                                             */
 /*  GUIX Studio Revision 6.1.8.1                                               */
-/*  Date (dd.mm.yyyy): 14. 9.2021   Time (hh:mm): 09:37                        */
+/*  Date (dd.mm.yyyy): 30. 9.2021   Time (hh:mm): 09:11                        */
 /*******************************************************************************/
 
 
@@ -346,10 +346,13 @@ GX_CONST GX_UBYTE display_1_STRING_8_English[] = "prompt";
 GX_CONST GX_UBYTE display_1_STRING_9_English[] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 GX_CONST GX_UBYTE display_1_STRING_10_English[] = "ECG 106";
 GX_CONST GX_UBYTE display_1_STRING_11_English[] = "ECG 118";
+GX_CONST GX_UBYTE display_1_STRING_12_English[] = {0x45, 0x73, 0x70, 0x65, 0x72, 0x61, 0x6e, 0x64, 0x6f, 0x20, 0x63, 0x6f, 0x6e, 0x65, 0x78, 0xc3, 0xa3, 0x6f, 0x2e, 0x2e, 0x2e, 0x00};
+GX_CONST GX_UBYTE display_1_STRING_13_English[] = "Esperando conexao...";
+GX_CONST GX_UBYTE display_1_STRING_14_English[] = "IP:";
 
 /* String Table for display_1 language English                                 */
 
-GX_CONST GX_STRING display_1_English_string_table[20] =
+GX_CONST GX_STRING display_1_English_string_table[23] =
 {
     {GX_NULL, 0},
     {(GX_CONST GX_CHAR *)display_1_HELLO_WORLD_English, sizeof(display_1_HELLO_WORLD_English) - 1},
@@ -370,7 +373,10 @@ GX_CONST GX_STRING display_1_English_string_table[20] =
     {(GX_CONST GX_CHAR *)display_1_STRING_8_English, sizeof(display_1_STRING_8_English) - 1},
     {(GX_CONST GX_CHAR *)display_1_STRING_9_English, sizeof(display_1_STRING_9_English) - 1},
     {(GX_CONST GX_CHAR *)display_1_STRING_10_English, sizeof(display_1_STRING_10_English) - 1},
-    {(GX_CONST GX_CHAR *)display_1_STRING_11_English, sizeof(display_1_STRING_11_English) - 1}
+    {(GX_CONST GX_CHAR *)display_1_STRING_11_English, sizeof(display_1_STRING_11_English) - 1},
+    {(GX_CONST GX_CHAR *)display_1_STRING_12_English, sizeof(display_1_STRING_12_English) - 1},
+    {(GX_CONST GX_CHAR *)display_1_STRING_13_English, sizeof(display_1_STRING_13_English) - 1},
+    {(GX_CONST GX_CHAR *)display_1_STRING_14_English, sizeof(display_1_STRING_14_English) - 1}
 };
 
 /*  Language Table                                                             */

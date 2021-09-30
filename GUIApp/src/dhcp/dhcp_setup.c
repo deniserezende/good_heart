@@ -1,5 +1,6 @@
 #include <dhcp/dhcp_setup.h>
 #include "main_thread.h"
+#include "guiapp_event_handlers.h"
 
 /* If semi hosting is defined, define the debug output
  * method using printf.
@@ -151,7 +152,7 @@ UINT run_dhcp_client_session(NX_DHCP *client_ptr, NX_IP *ip_ptr)
                             unsigned int c = ((( unsigned int)client_address>>8)&0xff);
                             unsigned int d = (((unsigned int)client_address)&0xff);
                             sprintf(ip, "IP: %d.%d.%d.%d", a, b, c, d);
-
+                            setIP(ip);
                             /* Debugger is connected */
                             printf("DHCP Client address is %d.%d.%d.%d \n", a, b, c, d);
                         }

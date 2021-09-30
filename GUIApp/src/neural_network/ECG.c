@@ -108,5 +108,7 @@ Lista JsonArrayToECG(char * str){
         }
         list = inserir(list, createECG(P, Q, R, S, T, RR, QT, QRS));
     }
+
+    cJSON_Delete(jsonArray);
     return list;
 }

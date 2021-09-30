@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+int ECGFiles[] = { 100, 101, 103, 105, 106, 109, 111, 118, 119, 124, 214};
+
 typedef struct elemento{
     int IdMsg;
     int OpCode;
@@ -150,5 +152,29 @@ MessageBody JsonToMessageBody(char* string){
 
     cJSON_Delete(json);
     return messageBody;
+}
+
+char * getECGFiles(){
+    char *string = NULL;
+    char str[3];
+    cJSON* files = cJSON_CreateArray();
+    cJSON* item = NULL;
+    cJSON* file = NULL;
+    for(int i=0;i<11;i++){
+        item = cJSON_CreateObject();
+
+        sprintf(str, "%d", ECGFiles[i]);
+
+        file = cJSON_CreateString(str);
+
+        cJSON_AddItemToObject(item, "ECGFileName", file);
+
+        cJSON_AddItemReferenceToArray(files, item);
+
+    }
+
+    string = cJSON_Print(files);
+    cJSON_Delete(files);
+    return string;
 }
 

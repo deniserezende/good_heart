@@ -6,7 +6,7 @@
 /*  GUIX Studio User Guide, or visit our web site at azure.com/rtos            */
 /*                                                                             */
 /*  GUIX Studio Revision 6.1.8.1                                               */
-/*  Date (dd.mm.yyyy): 14. 9.2021   Time (hh:mm): 09:37                        */
+/*  Date (dd.mm.yyyy): 30. 9.2021   Time (hh:mm): 09:11                        */
 /*******************************************************************************/
 
 
@@ -23,12 +23,8 @@ extern   "C" {
 /* Define widget ids                                                           */
 
 #define ID_WINDOW1 1
-#define BTN_START 2
-#define CK_ECG1 3
-#define CK_ECG2 4
-#define BTN_RUN 5
-#define P_RESULT 6
-#define TXT_IP 7
+#define P_WAIT 2
+#define P_IP 3
 
 
 /* Define animation ids                                                        */
@@ -75,28 +71,6 @@ typedef struct
 
 typedef struct
 {
-    GX_RESOURCE_ID string_id; 
-    GX_RESOURCE_ID font_id;
-    GX_RESOURCE_ID normal_text_color_id;
-    GX_RESOURCE_ID selected_text_color_id;
-    GX_RESOURCE_ID disabled_text_color_id;
-} GX_TEXT_BUTTON_PROPERTIES;
-
-typedef struct
-{
-    GX_RESOURCE_ID string_id; 
-    GX_RESOURCE_ID font_id;
-    GX_RESOURCE_ID normal_text_color_id;
-    GX_RESOURCE_ID selected_text_color_id;
-    GX_RESOURCE_ID disabled_text_color_id;
-    GX_RESOURCE_ID off_pixelmap_id;
-    GX_RESOURCE_ID on_pixelmap_id;
-    GX_RESOURCE_ID off_disabled_pixelmap_id;
-    GX_RESOURCE_ID on_disabled_pixelmap_id;
-} GX_RADIO_BUTTON_PROPERTIES;
-
-typedef struct
-{
     GX_RESOURCE_ID string_id;
     GX_RESOURCE_ID font_id;
     GX_RESOURCE_ID normal_text_color_id;
@@ -115,12 +89,8 @@ typedef struct
 typedef struct WINDOW1_CONTROL_BLOCK_STRUCT
 {
     GX_WINDOW_MEMBERS_DECLARE
-    GX_TEXT_BUTTON window1_BTN_START;
-    GX_RADIO_BUTTON window1_CK_ECG1;
-    GX_RADIO_BUTTON window1_CK_ECG2;
-    GX_TEXT_BUTTON window1_BTN_RUN;
-    GX_PROMPT window1_P_RESULT;
-    GX_PROMPT window1_TXT_IP;
+    GX_PROMPT window1_prompt;
+    GX_PROMPT window1_prompt_1;
 } WINDOW1_CONTROL_BLOCK;
 
 
@@ -218,8 +188,6 @@ typedef struct GX_STUDIO_DISPLAY_INFO_STRUCT
 
 /* Declare Studio-generated functions for creating top-level widgets           */
 
-UINT gx_studio_text_button_create(GX_CONST GX_STUDIO_WIDGET *info, GX_WIDGET *control_block, GX_WIDGET *parent);
-UINT gx_studio_radio_button_create(GX_CONST GX_STUDIO_WIDGET *info, GX_WIDGET *control_block, GX_WIDGET *parent);
 UINT gx_studio_prompt_create(GX_CONST GX_STUDIO_WIDGET *info, GX_WIDGET *control_block, GX_WIDGET *parent);
 UINT gx_studio_window_create(GX_CONST GX_STUDIO_WIDGET *info, GX_WIDGET *control_block, GX_WIDGET *parent);
 GX_WIDGET *gx_studio_widget_create(GX_BYTE *storage, GX_CONST GX_STUDIO_WIDGET *definition, GX_WIDGET *parent);
