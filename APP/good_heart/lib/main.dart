@@ -5,13 +5,26 @@ import 'home_page.dart';
 import 'connection_page.dart';
 import 'evaluation_page.dart';
 import 'settings_page.dart';
+import 'dart:io';
 
 void main() {
   runApp(MyApp());
 }
 
+class Wrapper {
+  Socket? client;
+  Wrapper();
+  void setClient(Socket sock) {
+    this.client = sock;
+  }
+}
+
 class MyApp extends StatelessWidget {
+
+  var socket = new Wrapper();
+
   @override
+
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -21,9 +34,9 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         '/': (_) => DefaultHomePage(),
-        '/connection_page': (_) => ConnectionPage(),
-        '/evaluation_page': (_) => Evaluation(),
-        '/settings_page': (_) => SettingsPage(),
+        '/connection_page': (_) => ConnectionPage(socket: socket),
+        '/evaluation_page': (_) => Evaluation(socket: socket),
+        '/settings_page': (_) => SettingsPage(socket: socket),
       }
     );
   }

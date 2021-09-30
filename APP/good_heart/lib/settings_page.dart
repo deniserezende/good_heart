@@ -1,13 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:good_heart/main.dart';
+import 'dart:io';
 import 'home_page.dart';
+
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+
+  // Socket? client;
+  Wrapper? socket;
+  SettingsPage({Key? key, this.socket}) : super(key: key);
 
   @override
-  _SettingsPageState createState() => _SettingsPageState();
+  _SettingsPageState createState() => _SettingsPageState(client: this.socket!.client);
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+
+  Socket? client;
+  _SettingsPageState({this.client});
+
+  Future<void> showAlertNotDeveloped(BuildContext context) async {
+    return await showDialog(context: context,
+        builder: (context){
+          return AlertDialog(
+            content: Text("Hold on!\nUnfortunately this feature is not yet implemented..."),
+            actions: <Widget> [
+              TextButton(
+                  onPressed: (){
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Maybe next time."),
+              )
+
+
+            ]
+          );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
@@ -31,8 +60,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   leading: Icon(Icons.folder),
                   title: Text('Folder', style: TextStyle(fontSize: 18),),
                   dense: true,
-                  onTap: (){
-                    Navigator.pushNamed(context, '/AQUI');
+                  onTap: () async {
+                    // Navigator.pushNamed(context, '/AQUI');
+                    await showAlertNotDeveloped(context);
                   },
                 ),
                 margin: EdgeInsets.only(left:20, right:20, top: 10),
@@ -42,8 +72,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   leading: Icon(Icons.chat),
                   title: Text('Chat', style: TextStyle(fontSize: 18),),
                   dense: true,
-                  onTap: (){
-                    Navigator.pushNamed(context, '/AQUI');
+                  onTap: () async {
+                    // Navigator.pushNamed(context, '/AQUI');
+                    await showAlertNotDeveloped(context);
                   },
                 ),
                 margin: EdgeInsets.only(left:20, right:20, top: 10),
@@ -53,8 +84,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   leading: Icon(Icons.storage),
                   title: Text('Storage', style: TextStyle(fontSize: 18),),
                   dense: true,
-                  onTap: (){
-                    Navigator.pushNamed(context, '/AQUI');
+                  onTap: () async {
+                    // Navigator.pushNamed(context, '/AQUI');
+                    await showAlertNotDeveloped(context);
                   },
                 ),
                 margin: EdgeInsets.only(left:20, right:20, top: 10),
@@ -64,8 +96,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   leading: Icon(Icons.help),
                   title: Text('Help', style: TextStyle(fontSize: 18),),
                   dense: true,
-                  onTap: (){
-                    Navigator.pushNamed(context, '/AQUI');
+                  onTap: () async {
+                    // Navigator.pushNamed(context, '/AQUI');
+                    await showAlertNotDeveloped(context);
                   },
                 ),
                 margin: EdgeInsets.only(left:20, right:20, top: 10),
@@ -75,8 +108,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   leading: Icon(Icons.info),
                   title: Text('Info', style: TextStyle(fontSize: 18),),
                   dense: true,
-                  onTap: (){
-                    Navigator.pushNamed(context, '/AQUI');
+                  onTap: () async {
+                    // Navigator.pushNamed(context, '/AQUI');
+                    await showAlertNotDeveloped(context);
                   },
                 ),
                 margin: EdgeInsets.only(left:20, right:20, top: 10),
