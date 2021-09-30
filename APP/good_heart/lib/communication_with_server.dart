@@ -6,22 +6,44 @@ String communicationWithServerToJson(CommunicationWithServer data) => json.encod
 
 class CommunicationWithServer {
   CommunicationWithServer({
-    this.idMsg,
-    this.opCode,
+    this.IdMsg,
+    this.OpCode,
+    this.ECGTime,
+    this.ECGfile,
+    this.FreqCard,
+    this.GoodComplex,
+    this.BadComplex,
   });
 
-  dynamic idMsg;
-  dynamic opCode;
+  dynamic IdMsg;
+  dynamic OpCode;
+  dynamic ECGTime;
+  dynamic ECGfile;
+  dynamic FreqCard;
+  dynamic GoodComplex;
+  dynamic BadComplex;
 
   factory CommunicationWithServer.fromJson(Map<String, dynamic> json) =>
       CommunicationWithServer(
-        idMsg: json["IdMsg"],
-        opCode: json["OpCode"],
+        IdMsg: json["IdMsg"],
+        OpCode: json["OpCode"],
+        ECGTime: json["ECGTime"],
+        ECGfile: json["ECGfile"],
+        FreqCard: json["FreqCard"],
+        GoodComplex: json["GoodComplex"],
+        BadComplex: json["BadComplex"],
       );
+        
 
   Map<String, dynamic> toJson() =>
       {
-        "IdMsg": idMsg,
-        "OpCode": opCode,
+        "IdMsg": IdMsg,
+        "OpCode": OpCode,
+        "ECGTime": ECGTime,
+        "ECGfile": ECGfile,
+        "FreqCard": FreqCard,
+        "GoodComplex": GoodComplex,
+        "BadComplex": BadComplex,
       };
+
 }

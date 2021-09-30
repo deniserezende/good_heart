@@ -3,20 +3,33 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:good_heart/colors.dart';
+import 'package:good_heart/main.dart';
 
-class ConnectionPage extends StatelessWidget {
+import 'communication_with_server.dart';
 
+class ConnectionPage extends StatefulWidget {
 
+  Wrapper? socket;
+  ConnectionPage({Key? key, this.socket}) : super(key: key);
+
+  @override
+  _ConnectionPage createState() => _ConnectionPage(socket: this.socket);
+}
+
+class _ConnectionPage extends State<ConnectionPage> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _textEditingController = TextEditingController();
-  late final Socket client;
+  final TextEditingController _textEditingControllerIP = TextEditingController();
+  final TextEditingController _textEditingControllerConnectionTest = TextEditingController();
+  Wrapper? socket;
+
+  _ConnectionPage({this.socket});
 
   // Dialog Structure
   Future<void> showIPDialog(BuildContext context) async {
     return await showDialog(context: context,
         builder: (context){
-          // final TextEditingController _textEditingController = TextEditingController();
+          // final TextEditingController _textEditingControllerIP = TextEditingController();
           bool isChecked = false;
           return StatefulBuilder(builder: (context,setState){
             return AlertDialog(
@@ -27,11 +40,11 @@ class ConnectionPage extends StatelessWidget {
                     children: [
                       Text("Enter your host IP: ", style: TextStyle(height: 1.2, fontSize: 20),),
                       TextFormField(
-                      controller: _textEditingController,
+                      controller: _textEditingControllerIP,
                         validator: (value){
                           return value!.isNotEmpty ? null : "Invalid Field";
                         },
-                        decoration: InputDecoration(hintText: "198.162.0.101"),
+                        decoration: InputDecoration(hintText: "192.168.0.101"),
                       ),
                     ],
                   )
@@ -56,7 +69,64 @@ class ConnectionPage extends StatelessWidget {
     return await showDialog(context: context,
         builder: (context){
           return AlertDialog(
-            content: Text("IP: " + _textEditingController.text, style: TextStyle(height: 1.2, fontSize: 20),),
+            content: Text("IP: " + _textEditingControllerIP.text, style: TextStyle(height: 1.2, fontSize: 20),),
+            actions: <Widget> [
+              TextButton(
+                  onPressed: (){
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Ok"),
+              )
+
+
+            ]
+          );
+    });
+  }
+
+  Future<void> showAlertUnnableToConnect(BuildContext context) async {
+    return await showDialog(context: context,
+        builder: (context){
+          return AlertDialog(
+            content: Text("\"" + _textEditingControllerIP.text + "\" doesn't seem to be a valid IP."),
+            actions: <Widget> [
+              TextButton(
+                  onPressed: (){
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Ok"),
+              )
+
+
+            ]
+          );
+    });
+  }
+
+  Future<void> showAlertServerAnswer(BuildContext context) async {
+    return await showDialog(context: context,
+        builder: (context){
+          return AlertDialog(
+            content: Text("Server sent: \"" + _textEditingControllerConnectionTest.text + "\"."),
+            actions: <Widget> [
+              TextButton(
+                  onPressed: (){
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Ok"),
+              )
+
+
+            ]
+          );
+    });
+  }
+
+  Future<void> showAlertErrorSocket(BuildContext context) async {
+    return await showDialog(context: context,
+        builder: (context){
+          return AlertDialog(
+            content: Text("Socket ERROR."),
             actions: <Widget> [
               TextButton(
                   onPressed: (){
@@ -73,7 +143,6 @@ class ConnectionPage extends StatelessWidget {
 
   // Connection Page Structure
   @override
-  //const ConnectionPage({ Key? key }) : super(key: key);
   Widget build(BuildContext context) {
 
     var screenSize = MediaQuery.of(context).size;
@@ -88,8 +157,8 @@ class ConnectionPage extends StatelessWidget {
               Card( //AQUI não sei se esse align faz sentido dentro de um listview, já que ele não faz nada
                 child: Image.asset(
                   "assets/images/Gifs/HeartBeatBranco.gif",
-                  height: 380.0,
-                  width: 380.0,
+                  height: 300.0,
+                  width: 300.0,
                 ),
                 shadowColor: const Color.fromRGBO(255, 255, 255, 0),
                 color: Colors.grey[50],
@@ -106,13 +175,12 @@ class ConnectionPage extends StatelessWidget {
                   ),
                   onTap: () async {
                     await showIPDialog(context);
-                    client = await Socket.connect(_textEditingController.text, 3333);
-                    //await Future.delayed(Duration(seconds: 5));
-                    // client.close();
+                    try {
+                      socket!.setClient(await Socket.connect(_textEditingControllerIP.text, 3333));
+                    } catch(_) {
+                      await showAlertUnnableToConnect(context);
+                    }
 
-                    // AQUI
-                    //Navigator.of(context).pop();
-                    //Navigator.pushNamed(context, '/AQUI');
                   },
                 ),
                 shadowColor: const Color.fromRGBO(255, 255, 255, 0),
@@ -128,7 +196,8 @@ class ConnectionPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   onTap: () async {
-                    client.close();
+                    socket!.client!.close();
+                    // socket = Wrapper(null);
                   },
                 ),
                 shadowColor: const Color.fromRGBO(255, 255, 255, 0),
@@ -137,31 +206,33 @@ class ConnectionPage extends StatelessWidget {
               Card(
                 child: ListTile(
                   leading: Icon(Icons.send,  size: 40,),
-                  title: Text("Check connection to server", style: TextStyle(height: 1, fontSize: 20),),
+                  title: Text("Check connection with server", style: TextStyle(height: 1, fontSize: 20),),
                   subtitle: Text('Here is a second line'),
                   tileColor: MyColors.green[800], //AQUI
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   onTap: () async {
-                    var sendToServer = [
-                      {'id': 40},
-                      {'opcode': 300},
-                    ];
-                    var jsonText = jsonEncode(sendToServer);
+                    var sendToServer = CommunicationWithServer(IdMsg: "Testing connection", OpCode: 100);
+                    socket!.client!.write(sendToServer.toJson());
 
-                    client.write(jsonText);
-                    client.listen(
-                      // handle data from the client
-                          (Uint8List data) async {
-                            await Future.delayed(Duration(seconds: 1));
-                            final message = String.fromCharCodes(data);
-                            client.write(message);
-                            print(message);
-                            var jsonText = jsonDecode(message);
-                            print(jsonText);
-                          }
-                    );
+                    try {
+                      socket!.client!.listen((List<int> bytes) {
+                        // print(new String.fromCharCodes(bytes).trim());
+                        _textEditingControllerConnectionTest.text = (new String.fromCharCodes(bytes).trim());
+                      }, 
+                    
+                      onError: (error, StackTrace trace) async {
+                        await showAlertErrorSocket(context);
+                      },
+
+                      cancelOnError: false
+                      );
+                      await showAlertServerAnswer(context);
+
+                    }catch(_) {
+                      print(_);
+                    }
 
                   },
                 ),
