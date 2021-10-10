@@ -38,7 +38,7 @@ class _DefaultHomePage extends State<DefaultHomePage> {
                             Card(
                               child: Padding(
                                 padding: EdgeInsets.only(left: 30, right: 30),
-                                child: Text("1. Click the “Wi-Fi” button bellow and then click “Connect to Wi-Fi”.\n",
+                                child: Text("1. Click the “Device” button bellow and then click “Connect to Device”.\n",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(height: 1.2, fontSize: 20),
                                 ),
@@ -136,8 +136,8 @@ class _DefaultHomePage extends State<DefaultHomePage> {
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.wifi),
-              label: 'Wi-Fi',
+              icon: Icon(Icons.router_rounded),
+              label: 'Device',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.folder),
