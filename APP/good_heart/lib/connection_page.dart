@@ -1,11 +1,23 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:good_heart/colors.dart';
 import 'package:good_heart/main.dart';
-
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:good_heart/globals.dart' as globals;
 import 'communication_with_server.dart';
+import 'package:logger/logger.dart';
+
+
+var logger = Logger(
+  filter: null,
+  printer: PrettyPrinter(),
+  output: null,
+);
+
+var LoggerClass = "ConnectionPage";
+var isConnected = 0;
 
 class ConnectionPage extends StatefulWidget {
 
@@ -13,7 +25,7 @@ class ConnectionPage extends StatefulWidget {
   ConnectionPage({Key? key, this.socket}) : super(key: key);
 
   @override
-  _ConnectionPage createState() => _ConnectionPage(socket: this.socket);
+  _ConnectionPage createState() => _ConnectionPage(this.socket);
 }
 
 class _ConnectionPage extends State<ConnectionPage> {
@@ -21,15 +33,50 @@ class _ConnectionPage extends State<ConnectionPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _textEditingControllerIP = TextEditingController();
   final TextEditingController _textEditingControllerConnectionTest = TextEditingController();
-  Wrapper? socket;
+  final TextEditingController _textForAppearText = TextEditingController();
 
-  _ConnectionPage({this.socket});
+  Wrapper? socket;
+  int _pressedOkInConnect = 0;
+
+  _ConnectionPage(Wrapper? socket){
+      this.socket = socket;
+    if(isConnected == 1){
+      startSocketListenInConnectionPage();
+    }
+  }
+
+  void startSocketListenInConnectionPage(){
+    socket!.listener.listen((List<int> bytes) async { // AQUI acho que não tem o await
+      var receivedFromServer = CommunicationWithServer.fromJson(jsonDecode(new String.fromCharCodes(bytes).trim()));
+
+      _textEditingControllerConnectionTest.text = "Not connected";
+
+      switch(receivedFromServer.OpCode){
+        case 510:
+          setState(() {
+            _textEditingControllerConnectionTest.text = "Connected";
+          });
+          await showAlertServerAnswer(context);
+          break;
+        default:
+          logger.d("[$LoggerClass] Sent from server unknown OpCode");
+          break;
+
+      }
+    },
+
+    onError: (error, StackTrace trace) async {
+      await showAlertErrorSocket(context);
+    },
+
+    cancelOnError: false
+    );
+  }
 
   // Dialog Structure
   Future<void> showIPDialog(BuildContext context) async {
     return await showDialog(context: context,
         builder: (context){
-          // final TextEditingController _textEditingControllerIP = TextEditingController();
           bool isChecked = false;
           return StatefulBuilder(builder: (context,setState){
             return AlertDialog(
@@ -53,7 +100,8 @@ class _ConnectionPage extends State<ConnectionPage> {
                 TextButton(
                   child: Text('Ok'),
                   onPressed: (){
-                    if(_formKey.currentState!.validate()){
+                    if(_formKey.currentState!.validate()){ // AQUI
+                      _pressedOkInConnect = 1;
                       // Do something like updating SharedPreferences or User Settings etc.
                       Navigator.of(context).pop();
                     }
@@ -69,7 +117,7 @@ class _ConnectionPage extends State<ConnectionPage> {
     return await showDialog(context: context,
         builder: (context){
           return AlertDialog(
-            content: Text("IP: " + _textEditingControllerIP.text, style: TextStyle(height: 1.2, fontSize: 20),),
+            content: Text("IP: " + _textEditingControllerIP.text, style: TextStyle(height: 1.2, fontSize: 18),),
             actions: <Widget> [
               TextButton(
                   onPressed: (){
@@ -77,18 +125,16 @@ class _ConnectionPage extends State<ConnectionPage> {
                   },
                   child: Text("Ok"),
               )
-
-
             ]
           );
     });
   }
 
-  Future<void> showAlertUnnableToConnect(BuildContext context) async {
+  Future<void> showAlertUnableToConnect(BuildContext context) async {
     return await showDialog(context: context,
         builder: (context){
           return AlertDialog(
-            content: Text("\"" + _textEditingControllerIP.text + "\" doesn't seem to be a valid IP."),
+            content: Text("\"" + _textEditingControllerIP.text + "\" \ndoesn't seem to be a valid IP.", style: TextStyle(fontSize: 18),),
             actions: <Widget> [
               TextButton(
                   onPressed: (){
@@ -96,8 +142,6 @@ class _ConnectionPage extends State<ConnectionPage> {
                   },
                   child: Text("Ok"),
               )
-
-
             ]
           );
     });
@@ -107,7 +151,8 @@ class _ConnectionPage extends State<ConnectionPage> {
     return await showDialog(context: context,
         builder: (context){
           return AlertDialog(
-            content: Text("Server sent: \"" + _textEditingControllerConnectionTest.text + "\"."),
+            content: _checkingConnectionText(_textEditingControllerConnectionTest),
+
             actions: <Widget> [
               TextButton(
                   onPressed: (){
@@ -115,8 +160,6 @@ class _ConnectionPage extends State<ConnectionPage> {
                   },
                   child: Text("Ok"),
               )
-
-
             ]
           );
     });
@@ -134,11 +177,26 @@ class _ConnectionPage extends State<ConnectionPage> {
                   },
                   child: Text("Ok"),
               )
-
-
             ]
           );
     });
+  }
+
+  Future<void> showAlertPassedSocket(BuildContext context) async {
+    return await showDialog(context: context,
+        builder: (context){
+          return AlertDialog(
+              content: _appearText(_textForAppearText),
+              actions: <Widget> [
+                TextButton(
+                  onPressed: (){
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Ok"),
+                )
+              ]
+          );
+        });
   }
 
   // Connection Page Structure
@@ -166,9 +224,9 @@ class _ConnectionPage extends State<ConnectionPage> {
               ),
               Card(
                 child: ListTile(
-                  leading: Icon(Icons.wifi,  size: 40,),
-                  title: Text("Connect to Wi-Fi", style: TextStyle(height: 1, fontSize: 20),),
-                  subtitle: Text('Here is a second line'),
+                  leading: Icon(Icons.mobile_friendly_rounded,  size: 40,),
+                  title: Text("Connect to Device", style: TextStyle(height: 1, fontSize: 20),),
+                  //subtitle: Text('Here is a second line'),
                   tileColor: MyColors.green[800], //AQUI
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
@@ -176,9 +234,20 @@ class _ConnectionPage extends State<ConnectionPage> {
                   onTap: () async {
                     await showIPDialog(context);
                     try {
-                      socket!.setClient(await Socket.connect(_textEditingControllerIP.text, 3333));
-                    } catch(_) {
-                      await showAlertUnnableToConnect(context);
+                      if(_pressedOkInConnect != 0) {
+                        socket!.setClient(await Socket.connect(
+                            _textEditingControllerIP.text, 3333));
+                        _pressedOkInConnect = 0;
+                        // Resets the idMsgValue
+                        globals.idMsgValue = 0;
+                        startSocketListenInConnectionPage();
+                        isConnected = 1;
+                      }
+                      } catch(_) {
+                      if(_pressedOkInConnect != 0) {
+                        await showAlertUnableToConnect(context);
+                        _pressedOkInConnect = 0;
+                      }
                     }
 
                   },
@@ -188,16 +257,26 @@ class _ConnectionPage extends State<ConnectionPage> {
               ),
               Card(
                 child: ListTile(
-                  leading: Icon(Icons.wifi_off,  size: 40,),
-                  title: Text("Disconnect from Wi-Fi", style: TextStyle(height: 1, fontSize: 20),),
-                  subtitle: Text('Here is a second line'),
+                  leading: Icon(Icons.mobile_off_rounded,  size: 40,),
+                  title: Text("Disconnect from Device", style: TextStyle(height: 1, fontSize: 20),),
+                  //subtitle: Text('Here is a second line'),
                   tileColor: MyColors.green[800], //AQUI
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   onTap: () async {
-                    socket!.client!.close();
-                    // socket = Wrapper(null);
+                    try {
+                      var sendToServer = CommunicationWithServer(IdMsg: globals.idMsgValue, OpCode: 700);
+                      socket!.client!.write(sendToServer.toJson());
+                      socket!.client!.close();
+                      _textForAppearText.text = "Disconnected";
+                      await showAlertPassedSocket(context);
+
+                    }catch(_) { // AQUI acho que tá com um bug
+                      _textForAppearText.text = "Disconnected";
+                      await showAlertPassedSocket(context);
+                      //await showAlertErrorSocket(context);
+                    }
                   },
                 ),
                 shadowColor: const Color.fromRGBO(255, 255, 255, 0),
@@ -205,32 +284,22 @@ class _ConnectionPage extends State<ConnectionPage> {
               ),
               Card(
                 child: ListTile(
-                  leading: Icon(Icons.send,  size: 40,),
-                  title: Text("Check connection with server", style: TextStyle(height: 1, fontSize: 20),),
-                  subtitle: Text('Here is a second line'),
+                  leading: Icon(Icons.cable,  size: 40,),
+                  title: Text("Check connection", style: TextStyle(height: 1, fontSize: 20),),
+                  //subtitle: Text('Here is a second line'),
                   tileColor: MyColors.green[800], //AQUI
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   onTap: () async {
-                    var sendToServer = CommunicationWithServer(IdMsg: "Testing connection", OpCode: 100);
-                    socket!.client!.write(sendToServer.toJson());
-
                     try {
-                      socket!.client!.listen((List<int> bytes) {
-                        // print(new String.fromCharCodes(bytes).trim());
-                        _textEditingControllerConnectionTest.text = (new String.fromCharCodes(bytes).trim());
-                      }, 
-                    
-                      onError: (error, StackTrace trace) async {
-                        await showAlertErrorSocket(context);
-                      },
-
-                      cancelOnError: false
-                      );
-                      await showAlertServerAnswer(context);
+                      globals.idMsgValue += 1;
+                      var sendToServer = CommunicationWithServer(IdMsg: globals.idMsgValue, OpCode: 500);
+                      socket!.client!.write(sendToServer.toJson());
 
                     }catch(_) {
+                      _textEditingControllerConnectionTest.text = "Not connected";
+                      await showAlertServerAnswer(context);
                       print(_);
                     }
 
@@ -243,7 +312,7 @@ class _ConnectionPage extends State<ConnectionPage> {
                 child: ListTile(
                   leading: Icon(Icons.scatter_plot,  size: 40,),
                   title: Text("Show IP", style: TextStyle(height: 1, fontSize: 20),),
-                  subtitle: Text('Here is a second line'),
+                  //subtitle: Text('Here is a second line'),
                   tileColor: MyColors.green[800], //AQUI
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
@@ -262,4 +331,61 @@ class _ConnectionPage extends State<ConnectionPage> {
 
     );
   }
+}
+
+Widget _appearText(_text){
+
+  const colorizeTextStyle = TextStyle(
+    fontSize: 18.0,
+    fontFamily: 'Horizon',
+  );
+
+  return SizedBox(
+    width: 250.0,
+    child: DefaultTextStyle(
+      style: const TextStyle(
+        fontSize: 18.0,
+        fontFamily: 'popin',
+        color: Color.fromRGBO(0, 0, 0, 1),
+      ),
+      child: AnimatedTextKit(
+          isRepeatingAnimation: false,
+          animatedTexts: [
+            ColorizeAnimatedText("\"" + _text.text + "\".",
+              textStyle: colorizeTextStyle,
+              colors: [Color.fromRGBO(0, 0, 0, 1), Color.fromRGBO(0, 0, 0, 1),]),
+          ]
+      ),
+    ),
+  );
+}
+
+
+Widget _checkingConnectionText(_text){
+
+  const colorizeTextStyle = TextStyle(
+    fontSize: 18.0,
+    fontFamily: 'Horizon',
+  );
+
+  return SizedBox(
+    width: 250.0,
+    child: DefaultTextStyle(
+      style: const TextStyle(
+        fontSize: 18.0,
+        fontFamily: 'popin',
+        color: Color.fromRGBO(0, 0, 0, 1),
+      ),
+      child: AnimatedTextKit(
+          isRepeatingAnimation: false,
+          animatedTexts: [
+            TyperAnimatedText('Checking...'
+                ,speed: Duration(milliseconds: 100)),
+            ColorizeAnimatedText("\"" + _text.text + "\".",
+                textStyle: colorizeTextStyle,
+                colors: [Color.fromRGBO(0, 0, 0, 1), Color.fromRGBO(0, 0, 0, 1),]),
+        ],
+      ),
+    ),
+  );
 }
