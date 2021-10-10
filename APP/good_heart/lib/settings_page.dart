@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:good_heart/colors.dart';
 import 'package:good_heart/main.dart';
 import 'dart:io';
-import 'home_page.dart';
+import 'globals.dart' as globals;
 
 class SettingsPage extends StatefulWidget {
 
@@ -37,6 +38,24 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 
+  Future<void> infoDialog(BuildContext context) async {
+    return await showDialog(context: context,
+        builder: (context){
+          return AlertDialog(
+            title: Icon(Icons.medical_services_rounded, color: MyColors.red, size: 50.0,),
+            content: Text("Version: 1.0 \nDate: 07-10-2021\n", style: TextStyle(height: 1.2, fontSize: 18),),
+            actions: <Widget> [
+              TextButton(
+                  onPressed: (){
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Ok"),
+              )
+            ]
+          );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
@@ -55,62 +74,61 @@ class _SettingsPageState extends State<SettingsPage> {
                 color: Colors.grey[50],
                 margin: EdgeInsets.only(left:20, right:20, top: 10),
               ),
-              Card(
-                child: ListTile(
-                  leading: Icon(Icons.folder),
-                  title: Text('Folder', style: TextStyle(fontSize: 18),),
-                  dense: true,
-                  onTap: () async {
-                    // Navigator.pushNamed(context, '/AQUI');
-                    await showAlertNotDeveloped(context);
-                  },
-                ),
-                margin: EdgeInsets.only(left:20, right:20, top: 10),
-              ),
-              Card(
-                child: ListTile(
-                  leading: Icon(Icons.chat),
-                  title: Text('Chat', style: TextStyle(fontSize: 18),),
-                  dense: true,
-                  onTap: () async {
-                    // Navigator.pushNamed(context, '/AQUI');
-                    await showAlertNotDeveloped(context);
-                  },
-                ),
-                margin: EdgeInsets.only(left:20, right:20, top: 10),
-              ),
-              Card(
-                child: ListTile(
-                  leading: Icon(Icons.storage),
-                  title: Text('Storage', style: TextStyle(fontSize: 18),),
-                  dense: true,
-                  onTap: () async {
-                    // Navigator.pushNamed(context, '/AQUI');
-                    await showAlertNotDeveloped(context);
-                  },
-                ),
-                margin: EdgeInsets.only(left:20, right:20, top: 10),
-              ),
-              Card(
-                child: ListTile(
-                  leading: Icon(Icons.help),
-                  title: Text('Help', style: TextStyle(fontSize: 18),),
-                  dense: true,
-                  onTap: () async {
-                    // Navigator.pushNamed(context, '/AQUI');
-                    await showAlertNotDeveloped(context);
-                  },
-                ),
-                margin: EdgeInsets.only(left:20, right:20, top: 10),
-              ),
+              // Card(
+              //   child: ListTile(
+              //     leading: Icon(Icons.folder),
+              //     title: Text('Folder', style: TextStyle(fontSize: 18),),
+              //     dense: true,
+              //     onTap: () async {
+              //       // Navigator.pushNamed(context, '/AQUI');
+              //       await showAlertNotDeveloped(context);
+              //     },
+              //   ),
+              //   margin: EdgeInsets.only(left:20, right:20, top: 10),
+              // ),
+              // Card(
+              //   child: ListTile(
+              //     leading: Icon(Icons.chat),
+              //     title: Text('Chat', style: TextStyle(fontSize: 18),),
+              //     dense: true,
+              //     onTap: () async {
+              //       // Navigator.pushNamed(context, '/AQUI');
+              //       await showAlertNotDeveloped(context);
+              //     },
+              //   ),
+              //   margin: EdgeInsets.only(left:20, right:20, top: 10),
+              // ),
+              // Card(
+              //   child: ListTile(
+              //     leading: Icon(Icons.storage),
+              //     title: Text('Storage', style: TextStyle(fontSize: 18),),
+              //     dense: true,
+              //     onTap: () async {
+              //       // Navigator.pushNamed(context, '/AQUI');
+              //       await showAlertNotDeveloped(context);
+              //     },
+              //   ),
+              //   margin: EdgeInsets.only(left:20, right:20, top: 10),
+              // ),
+              // Card(
+              //   child: ListTile(
+              //     leading: Icon(Icons.help),
+              //     title: Text('Help', style: TextStyle(fontSize: 18),),
+              //     dense: true,
+              //     onTap: () async {
+              //       // Navigator.pushNamed(context, '/AQUI');
+              //       await showAlertNotDeveloped(context);
+              //     },
+              //   ),
+              //   margin: EdgeInsets.only(left:20, right:20, top: 10),
+              // ),
               Card(
                 child: ListTile(
                   leading: Icon(Icons.info),
                   title: Text('Info', style: TextStyle(fontSize: 18),),
                   dense: true,
                   onTap: () async {
-                    // Navigator.pushNamed(context, '/AQUI');
-                    await showAlertNotDeveloped(context);
+                    await infoDialog(context);
                   },
                 ),
                 margin: EdgeInsets.only(left:20, right:20, top: 10),
@@ -121,79 +139,3 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 }
-
-//
-// import 'package:flutter/material.dart';
-//
-// class SettingsPage extends StatefulWidget {
-//   const SettingsPage({Key? key}) : super(key: key);
-//
-//   @override
-//   _SettingsPageState createState() => _SettingsPageState();
-// }
-//
-// class _SettingsPageState extends State<SettingsPage> {
-//   @override
-//   Widget build(BuildContext context) {
-//     var screenSize = MediaQuery.of(context).size;
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Settings'),
-//       ),
-//       body: SafeArea(
-//           child: Center(
-//               child: Padding(
-//                   padding: EdgeInsets.only(top: screenSize.height * 0.12),
-//                   child: Column(
-//                     children: <Widget>[
-//
-//                       ElevatedButton(
-//                           onPressed: (){
-//
-//                           },
-//                           child: Text('Setting 1')
-//                       ),
-//
-//                       ElevatedButton(
-//                           onPressed: (){
-//
-//                           },
-//                           child: Text('Setting 2')
-//                       ),
-//
-//                       ElevatedButton(
-//                           onPressed: (){
-//
-//                           },
-//                           child: Text('Setting 3')
-//                       ),
-//
-//                       ElevatedButton(
-//                           onPressed: (){
-//
-//                           },
-//                           child: Text('Setting 4')
-//                       ),
-//
-//                       ElevatedButton(
-//                           onPressed: (){
-//
-//                           },
-//                           child: Text('Setting 5')
-//                       ),
-//
-//                       ElevatedButton(
-//                           onPressed: (){
-//
-//                           },
-//                           child: Text('Setting 6')
-//                       )
-//
-//                     ],
-//                   )
-//               )
-//           )
-//       ),
-//     );
-//   }
-// }
