@@ -6,9 +6,10 @@
 #include "neural_network/NeuralNetwork.h"
 #include "neural_network/Layer.h"
 #include "guiapp_event_handlers.h"
+#include <math.h>
 
 static FX_FILE g_file;
-char fileContent[4096];
+char fileContent[6000];
 
 NeuralNetwork neural_network = NULL;
 Layer input_layer, hidden_layer, output_layer = NULL;
@@ -118,15 +119,17 @@ void tcp_thread_entry(void)
 
           Lista  list = NULL;
 
-          int A = 0, N = 0;
+          int A = 0, N = 0, idMsg, conn = 1;
 
           double nn_result;
 
           switch (getOpCode(message)) {
             case TEST_OP:
+                idMsg = getIdMsg(message);
                 free(message);
                 message = createMessageBody();
                 setOpCode(message, RESPONSE_TEST_OP);
+                setIdMsg(message, idMsg+1);
 
                 response = MessageBodyToJson(message);
 
@@ -139,23 +142,28 @@ void tcp_thread_entry(void)
                 break;
             case FILE_EVALUATION:
                 ECGFileName = getECGFile(message);
+                idMsg = getIdMsg(message);
                 free(message);
                 message = createMessageBody();
                 setOpCode(message, RESPONSE_FILE_EVALUATION);
                 setECGFile(message, ECGFileName);
+                setIdMsg(message, idMsg+1);
 
                 list = loadECGFile(ECGFileName);
+                int list_size = getListaSize(list);
+                double hr_sum = 0;
                 if(neural_network != NULL && list != NULL){
                     while(list != NULL){
+                        hr_sum += 60 / getRRValue(get(list));
                         nn_result = executeNeuralNetwork(neural_network, get(list));
                         nn_result>0.5 ? A++ : N++;
                         list = getProx(list);
                     }
+                    setHeartRate(message, round(hr_sum / list_size));
                     setGoodComplex(message, N);
                     setBadComplex(message, A);
                 }
                 response = MessageBodyToJson(message);
-
                 nx_packet_allocate(&g_packet_pool0, &packet_ptr, NX_TCP_PACKET, NX_WAIT_FOREVER);
                 nx_packet_data_append(packet_ptr, response, strlen(response), &g_packet_pool0, NX_WAIT_FOREVER);
                 nx_tcp_socket_send(&socket_echo, packet_ptr, NX_WAIT_FOREVER);
@@ -164,36 +172,39 @@ void tcp_thread_entry(void)
                 free(response);
                 break;
             case GET_FILES:
-                response = getECGFiles();
+                idMsg = getIdMsg(message);
+                free(message);
+                response = getECGFiles(idMsg);
                 nx_packet_allocate(&g_packet_pool0, &packet_ptr, NX_TCP_PACKET, NX_WAIT_FOREVER);
                 nx_packet_data_append(packet_ptr, response, strlen(response), &g_packet_pool0, NX_WAIT_FOREVER);
                 nx_tcp_socket_send(&socket_echo, packet_ptr, NX_WAIT_FOREVER);
                 free(response);
                 break;
+            case DISCONNECT:
+                free(message);
+                nx_tcp_socket_disconnect(&socket_echo, NX_WAIT_FOREVER);
+                nx_tcp_server_socket_unaccept(&socket_echo);
+                nx_tcp_server_socket_relisten(&g_ip0, 3333, &socket_echo);
+                setWaitConn();
+                conn = 0;
+                break;
             default:
+                idMsg = getIdMsg(message);
+                free(message);
+                message = createMessageBody();
+                setOpCode(message, NOT_FOUND);
+                setIdMsg(message, idMsg+1);
+                response = MessageBodyToJson(message);
+                nx_packet_allocate(&g_packet_pool0, &packet_ptr, NX_TCP_PACKET, NX_WAIT_FOREVER);
+                nx_packet_data_append(packet_ptr, response, strlen(response), &g_packet_pool0, NX_WAIT_FOREVER);
+                nx_tcp_socket_send(&socket_echo, packet_ptr, NX_WAIT_FOREVER);
+                free(response);
+                free(message);
                 break;
           }
+
+          if(!conn) break;
       }
-      /* Disconnect the server socket.  */
-      //status =  nx_tcp_socket_disconnect(&socket_echo, NX_WAIT_FOREVER);
-
-      /* Check for error.  */
-     // if (status)
-     //     error_counter++;
-
-      /* Unaccept the server socket.  */
-      //status =  nx_tcp_server_socket_unaccept(&socket_echo);
-
-      /* Check for error.  */
-      //if (status)
-     //     error_counter++;
-
-      /* Setup server socket for listening again.  */
-      //status =  nx_tcp_server_socket_relisten(&g_ip0, 7, &socket_echo);
-
-      /* Check for error.  */
-      if (status)
-          error_counter++;
   }
 
    /* Application has finished */

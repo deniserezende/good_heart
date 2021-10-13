@@ -84,6 +84,11 @@ void setConnection(){
     gx_system_canvas_refresh();
 }
 
+void setWaitConn(){
+    update_prompt_text(global_widget, P_WAIT, "Esperando conexao...");
+    gx_system_canvas_refresh();
+}
+
 //show_window((GX_WINDOW*)&window2, (GX_WIDGET*)widget, true);
 /*UINT window2_handler(GX_WINDOW *widget, GX_EVENT *event_ptr)
 {

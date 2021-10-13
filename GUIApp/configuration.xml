@@ -46,9 +46,9 @@
       <property id="config.bsp.ssp.mcu.adc.max_freq_hz" value="60000000"/>
     </config>
     <config id="config.bsp.synergy">
-      <property id="config.bsp.common.main" value="0x2000"/>
+      <property id="config.bsp.common.main" value="0x4000"/>
       <property id="config.bsp.common.process" value="0"/>
-      <property id="config.bsp.common.heap" value="0x6000"/>
+      <property id="config.bsp.common.heap" value="0x7000"/>
       <property id="config.bsp.common.vcc" value="3300"/>
       <property id="config.bsp.common.avcc0" value="3300"/>
       <property id="config.bsp.common.checking" value="config.bsp.common.checking.enabled"/>

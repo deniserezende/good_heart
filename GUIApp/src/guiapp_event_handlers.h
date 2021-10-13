@@ -3,6 +3,8 @@
 
 void setIP(char* ip);
 
+void setWaitConn();
+
 void setConnection();
 
 #endif

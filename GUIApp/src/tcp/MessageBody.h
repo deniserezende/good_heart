@@ -9,6 +9,10 @@
 
 #define GET_FILES 600
 
+#define DISCONNECT 700
+
+#define NOT_FOUND 404
+
 typedef void * MessageBody;
 
 MessageBody createMessageBody();
@@ -17,6 +21,8 @@ void setIdMsg(MessageBody messageBody, int IdMsg);
 
 void setOpCode(MessageBody messageBody, int opCode);
 
+void setHeartRate(MessageBody messageBody, int heartRate);
+
 int getOpCode(MessageBody messageBody);
 
 void setECGTime(MessageBody messageBody, int ECGTime);
@@ -24,6 +30,8 @@ void setECGTime(MessageBody messageBody, int ECGTime);
 void setECGFile(MessageBody messageBody, int ECGFile);
 
 int getECGFile(MessageBody messageBody);
+
+int getIdMsg(MessageBody messageBody);
 
 void setFreqCard(MessageBody messageBody, int FreqCard);
 
@@ -35,6 +43,6 @@ char * MessageBodyToJson(MessageBody messageBody);
 
 MessageBody JsonToMessageBody(char* string);
 
-char * getECGFiles();
+char * getECGFiles(int idMsg);
 
 #endif

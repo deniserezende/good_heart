@@ -33,9 +33,9 @@ Synergy Configuration
          HOCO OScillation Enable: HOCO oscillation is disabled after reset
     
   Synergy Common
-    Main stack size (bytes): 0x2000
+    Main stack size (bytes): 0x4000
     Process stack size (bytes): 0
-    Heap size (bytes) - A minimum of 4K (0x1000) is required if standard library functions are to be used.: 0x6000
+    Heap size (bytes) - A minimum of 4K (0x1000) is required if standard library functions are to be used.: 0x7000
     MCU Vcc (mV): 3300
     MCU Analog Power Supply AVCC0 (mV): 3300
     Parameter checking: Enabled
